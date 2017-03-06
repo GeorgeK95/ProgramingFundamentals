@@ -10,45 +10,95 @@ namespace _01.Largest_Common_End
     {
         static void Main(string[] args)
         {
-            string[] arrayOfWords1 = Console.ReadLine().Split(' ').ToArray();
-            string[] arrayOfWords2 = Console.ReadLine().Split(' ').ToArray();
+            string line1 = Console.ReadLine();
+            string line2 = Console.ReadLine();
 
-            int counterLeft = GetLeftCommonEnd(arrayOfWords1, arrayOfWords2, Math.Min(arrayOfWords1.Length, arrayOfWords2.Length));
-            int counterRight = GetRightCommonEnd(arrayOfWords1, arrayOfWords2, Math.Min(arrayOfWords1.Length, arrayOfWords2.Length));
+            string[] numbers1 = line1.Split(' ');
+            string[] numbers2 = line2.Split(' ');
 
-            Console.WriteLine(Math.Max(counterLeft, counterRight));
+            int start = 0;
+            int end = 0;
 
+            start = GetStart(numbers1, numbers2);
+            end = GetEnd(numbers1, numbers2);
+
+            Console.WriteLine(Math.Max(start, end));
         }
 
-        private static int GetRightCommonEnd(string[] arrayOfWords1, string[] arrayOfWords2, int size)
+        private static int GetEnd(string[] numbers1, string[] numbers2)
         {
-            int counter = 0;
+            int end = 0;
+            int diff = Math.Abs(numbers1.Length - numbers2.Length);
 
-            for (int i = 1; i <= size; i++)
+            if (numbers1.Length >= numbers2.Length)
             {
-                if (arrayOfWords1[arrayOfWords1.Length - i] == arrayOfWords2[arrayOfWords2.Length - i])
+                for (int i = numbers2.Length - 1; i >= 0; i--)
                 {
-                    counter++;
+                    if (numbers1[i + diff].Equals(numbers2[i]))
+                    {
+                        end++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = numbers1.Length - 1; i >= 0; i--)
+                {
+                    if (numbers1[i].Equals(numbers2[i + diff]))
+                    {
+                        end++;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
-            return counter;
+
+            return end;
         }
 
-        private static int GetLeftCommonEnd(string[] arrayOfWords1, string[] arrayOfWords2, int size)
+        private static int GetStart(string[] numbers1, string[] numbers2)
         {
-            int counter = 0;
+            int start = 0;
 
-            for (int i = 0; i < size; i++)
+            if (numbers1.Length > numbers2.Length)
             {
-                if (arrayOfWords1[i] == arrayOfWords2[i])
+                for (int i = 0; i < numbers2.Length; i++)
                 {
-                    counter++;
+                    if (numbers2[i].Equals(numbers1[i]))
+                    {
+                        start++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                }
+            }
+            else
+            {
+                for (int i = 0; i < numbers1.Length; i++)
+                {
+                    if (numbers2[i].Equals(numbers1[i]))
+                    {
+                        start++;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
-            return counter;
-        }
 
+            return start;
+        }
     }
 }

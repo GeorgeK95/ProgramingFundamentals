@@ -10,47 +10,37 @@ namespace _08.Most_Frequent_Number
     {
         static void Main(string[] args)
         {
-            int[] array = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
-            bool found = false;
-            int best = int.MinValue;
-            int value = 0;
+            string line1 = Console.ReadLine();
+            int[] array = line1.Split(' ').Select(int.Parse).ToArray();
+            int mostCommonNumber = GetMostCommonElement(array);
+            Console.WriteLine(mostCommonNumber);
+        }
+
+        private static int GetMostCommonElement(int[] array)
+        {
+            int number = 0;
+            int bestCount = 0;
 
             for (int i = 0; i < array.Length; i++)
             {
-                int count = GetFrequentCount(array, i);
+                int currCount = 0;
 
-                if (count > best)
+                for (int j = 0; j < array.Length; j++)
                 {
-                    found = true;
-                    best = count;
-                    value = array[i];
-                }
+                    if (array[i] == array[j])
+                    {
+                        currCount++;
 
-            }
-
-            if (found)
-            {
-                Console.WriteLine(value);
-            }
-            else
-            {
-                Console.WriteLine("No");
-            }
-        }
-
-        private static int GetFrequentCount(int[] array, int startIndex)
-        {
-            int counter = 0;
-
-            for (int i = startIndex; i < array.Length; i++)
-            {
-                if (array[startIndex] == array[i])
-                {
-                    counter++;
+                        if (currCount > bestCount)
+                        {
+                            bestCount = currCount;
+                            number = array[i];
+                        }
+                    }
                 }
             }
 
-            return counter;
+            return number;
         }
     }
 }

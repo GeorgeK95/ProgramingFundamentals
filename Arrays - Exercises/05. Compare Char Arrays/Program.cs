@@ -10,66 +10,47 @@ namespace _05.Compare_Char_Arrays
     {
         static void Main(string[] args)
         {
-            char[] array1 = Console.ReadLine().Split(' ').Select(char.Parse).ToArray();
-            char[] array2 = Console.ReadLine().Split(' ').Select(char.Parse).ToArray();
+            string line1 = Console.ReadLine();
+            string line2 = Console.ReadLine();
 
-            PrintInOrder(array1, array2);
-        }
+            char[] chArr1 = line1.Split(' ').Select(char.Parse).ToArray();
+            char[] chArr2 = line2.Split(' ').Select(char.Parse).ToArray();
 
-        private static void PrintInOrder(char[] array1, char[] array2)
-        {
-            int lenght = Math.Max(array1.Length, array2.Length);
+            bool isPrinted = false;
 
-            for (int i = 0; i < lenght; i++)
+            for (int i = 0; i < Math.Min(chArr1.Length, chArr2.Length); i++)
             {
-                if (array1[i] != array2[i])
+                if (chArr1[i] < chArr2[i])
                 {
-                    PrintEarlier(array1, array2, i);
+                    Print(chArr1, chArr2);
+                    isPrinted = true;
                     break;
+                }
+                else if (chArr1[i] > chArr2[i])
+                {
+                    Print(chArr2, chArr1);
+                    isPrinted = true;
+                    break;
+                }
+            }
+
+            if (!isPrinted)
+            {
+                if (chArr1.Length < chArr2.Length)
+                {
+                    Print(chArr1, chArr2);
                 }
                 else
                 {
-                    if (i == array1.Length - 1)
-                    {
-                        PrintEarlier(array1);
-                        PrintEarlier(array2);
-                        break;
-                    }
-                    if (i == array2.Length - 1)
-                    {
-                        PrintEarlier(array2);
-                        PrintEarlier(array1);
-                        break;
-                    }
+                    Print(chArr2, chArr1);
                 }
             }
-
         }
 
-        private static void PrintEarlier(char[] array)
+        private static void Print(char[] first, char[] second)
         {
-
-            for (int index = 0; index < array.Length; index++)
-            {
-                Console.Write(array[index]);
-            }
-
-            Console.WriteLine();
-
-        }
-
-        private static void PrintEarlier(char[] array1, char[] array2, int i)
-        {
-            if (array1[i] < array2[i])
-            {
-                PrintEarlier(array1);
-                PrintEarlier(array2);
-            }
-            else
-            {
-                PrintEarlier(array2);
-                PrintEarlier(array1);
-            }
+            Console.WriteLine(string.Join("", first));
+            Console.WriteLine(string.Join("", second));
         }
     }
 }

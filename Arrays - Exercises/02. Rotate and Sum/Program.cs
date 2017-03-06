@@ -10,68 +10,65 @@ namespace _02.Rotate_and_Sum
     {
         static void Main(string[] args)
         {
-            int[] inputArray = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
-            int k = int.Parse(Console.ReadLine());
-            long[] copyInputArray = new long[inputArray.Length * k];
+            string line1 = Console.ReadLine();
+            string line2 = Console.ReadLine();
+            int[] array = line1.Split(' ').Select(int.Parse).ToArray();
+            int k = int.Parse(line2);
+
+            int[] resultArray = GetResultArray(array, k);
+            int[] finalArray = MakeResult(array, resultArray);
+
+            Console.WriteLine(string.Join(" ", finalArray));
+        }
+
+        private static int[] GetResultArray(int[] array, int k)
+        {
+            int[] result = new int[array.Length * k];
+            int index = 0;
 
             for (int i = 0; i < k; i++)
             {
-                inputArray = RotateRightArray(inputArray);
-                copyInputArray = FillCopyInputArrayWithRotatedValues(copyInputArray, i * inputArray.Length, inputArray);
-            }
+                int el = array[array.Length - 1];
+                int[] tempArr = new int[array.Length];
 
-            PrintArr(inputArray, k, copyInputArray);
-        }
-
-        private static void PrintArr(int[] inputArray, int k, long[] copyInputArray)
-        {
-            for (int i = 0; i < inputArray.Length; i++)
-            {
-                long sum = 0;
-                for (int j = i; j < copyInputArray.Length; j += inputArray.Length)
+                for (int j = 1; j < array.Length; j++)
                 {
-                    sum += copyInputArray[j];
+                    tempArr[j] = array[j - 1];
                 }
 
-                Console.Write(sum + " ");
+                tempArr[0] = el;
+
+                for (int j = 0; j < tempArr.Length; j++)
+                {
+                    result[index] = tempArr[j];
+                    index++;
+                }
+
+                array = tempArr;
             }
+
+            return result;
         }
 
-        private static long[] FillCopyInputArrayWithRotatedValues(long[] copyInputArray, int i, int[] inputArray)
+        private static int[] MakeResult(int[] array, int[] result)
         {
-            int b = 0;
+            int[] finalArr = new int[array.Length];
+            int findex = 0;
 
-            while (b < inputArray.Length)
+            for (int i = 0; i < array.Length; i++)
             {
-                copyInputArray[i] = inputArray[b];
-                b++; i++;
+                int sum = 0;
+
+                for (int j = i; j < result.Length; j += array.Length)
+                {
+                    sum += result[j];
+                }
+
+                finalArr[findex] = sum;
+                findex++;
             }
 
-            return copyInputArray;
-        }
-
-        private static int[] RotateRightArray(int[] array)
-        {
-            int lastElement = array[array.Length - 1];
-
-            for (int i = array.Length - 1; i >= 1; i--)
-            {
-                array[i] = array[i - 1];
-            }
-
-            array[0] = lastElement;
-
-            return array;
-        }
-
-        private static long[] FillCopyInputArray(long[] copyInputArray, int[] inputArray)
-        {
-            for (int i = 0; i < inputArray.Length; i++)
-            {
-                copyInputArray[i] = inputArray[i];
-            }
-
-            return copyInputArray;
+            return finalArr;
         }
     }
 }

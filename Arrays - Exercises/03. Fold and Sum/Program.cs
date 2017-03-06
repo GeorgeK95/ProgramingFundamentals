@@ -6,88 +6,55 @@ using System.Threading.Tasks;
 
 namespace _03.Fold_and_Sum
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
-            int[] inputArray = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
-            int k = inputArray.Length / 4;
-            int[] sumArray = new int[k * 2];
+            string line1 = Console.ReadLine();
+            int[] array = line1.Split(' ').Select(int.Parse).ToArray();
+            int k = array.Length / 4;
 
-            sumArray = GetParts(k, inputArray);
+            List<int> foldedNumbers = GetFoldedNumbers(array, k);
+            int[] summedNumbers = SumArrays(foldedNumbers.ToArray(), SubArray(array, k, 2 * k));
 
-            SumAndPrint(inputArray, sumArray, k);
+            Console.WriteLine(string.Join(" ", summedNumbers));
+        }
+        public static T[] SubArray<T>(this T[] data, int index, int length)
+        {
+            T[] result = new T[length];
+            Array.Copy(data, index, result, 0, length);
+            return result;
         }
 
-        private static void SumAndPrint(int[] inputArray, int[] sumArray, int k)
+        private static int[] SumArrays(int[] v, int[] array)
         {
-            for (int i = 0; i < inputArray.Length / 2; i++)
+            int[] result = new int[v.Length];
+
+            for (int i = 0; i < v.Length; i++)
             {
-                Console.Write(inputArray[i + k] + sumArray[i] + " ");
+                result[i] = v[i] + array[i];
             }
 
-            Console.WriteLine();
+            return result;
         }
 
-        private static int[] GetParts(int k, int[] inputArray)
+        private static List<int> GetFoldedNumbers(int[] array, int k)
         {
-            int[] sumArray = new int[k * 2];
-            int[] sumArray1 = new int[k];
-            int[] sumArray2 = new int[k];
+            List<int> foldedNumbers = new List<int>();
+            int counter = 0;
 
-            for (int i = 0; i < k; i++)
+            for (int i = k - 1; i >= 0; i--)
             {
-                sumArray2[i] = inputArray[i];
+                foldedNumbers.Add(array[i]);
             }
 
-            Array.Reverse(sumArray2);
-            sumArray = ReverseFirst(sumArray, sumArray2);
-
-            for (int j = 0; j < k; j++)
+            for (int i = array.Length - 1; i > array.Length - 1 - k; i--)
             {
-                int last = GetLast(inputArray, j);
-                sumArray1[j] = last;
+                foldedNumbers.Add(array[i]);
+                counter++;
             }
 
-            sumArray = ReverseSecond(sumArray, sumArray1);
-
-            return sumArray;
-        }
-
-        private static int[] ReverseSecond(int[] sumArray, int[] sumArray1)
-        {
-            int p = 0;
-            for (int i = sumArray1.Length; i < sumArray.Length; i++)
-            {
-                sumArray[i] = sumArray1[p];
-
-                p++;
-            }
-
-            return sumArray;
-        }
-
-        private static int[] ReverseFirst(int[] sumArray, int[] sumArray2)
-        {
-            for (int i = 0; i < sumArray2.Length; i++)
-            {
-                sumArray[i] = sumArray2[i];
-            }
-
-            return sumArray;
-        }
-
-        private static int GetLast(int[] inputArray, int j)
-        {
-            int returnValue = 0;
-
-            for (int i = inputArray.Length - j; i >= 0; i--)
-            {
-                returnValue = inputArray[i - 1];
-                break;
-            }
-
-            return returnValue;
+            return foldedNumbers;
         }
     }
 }

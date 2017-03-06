@@ -10,30 +10,30 @@ namespace _10.Pairs_by_Difference
     {
         static void Main(string[] args)
         {
-            int[] array = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
-            int k = int.Parse(Console.ReadLine());
+            string line1 = Console.ReadLine();
+            int difference = int.Parse(Console.ReadLine());
+            int[] array = line1.Split(' ').Select(int.Parse).ToArray();
 
-            int numberOfPairs = GetPairsWithDifferenceK(array, k);
-
-            Console.WriteLine(numberOfPairs);
+            int pairs = GetPairs(array, difference);
+            Console.WriteLine(pairs);
         }
 
-        private static int GetPairsWithDifferenceK(int[] array, int k)
+        private static int GetPairs(int[] array, int difference)
         {
-            int count = 0;
-
-            for (int i = 0; i < array.Length - 1; i++)
+            int pairs = 0;
+            
+            for (int i = 0; i < array.Length; i++)
             {
                 for (int j = i + 1; j < array.Length; j++)
                 {
-                    if (Math.Abs(array[i] - array[j]) == k)
+                    if (Math.Abs(array[i] - array[j]) == difference)
                     {
-                        count++;
+                        pairs++;
                     }
                 }
             }
 
-            return count;
+            return pairs;
         }
     }
 }

@@ -10,12 +10,13 @@ namespace _09.Index_of_Letters
     {
         static void Main(string[] args)
         {
-            string word = Console.ReadLine();
-            for (int i = 0; i < word.Length; i++)
-            {
-                char currLetter = word[i];
+            string line = Console.ReadLine();
+            char[] letters = line.ToCharArray();
 
-                Console.WriteLine($"{currLetter} -> {(int)currLetter - (int)'a'}");
+            for (int i = 0; i < letters.Length; i++)
+            {
+                int value = letters[i] - 97;
+                Console.WriteLine($"{letters[i]} -> {value}");
             }
         }
     }

@@ -10,44 +10,56 @@ namespace _11.Equal_Sums
     {
         static void Main(string[] args)
         {
-            int[] array = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
-            bool found = false;
+            string line1 = Console.ReadLine();
+            int[] array = line1.Split(' ').Select(int.Parse).ToArray();
+            GetIndexOfEqualSumsElement(array);
+        }
 
-            for (int index = 0; index < array.Length; index++)
+        private static void GetIndexOfEqualSumsElement(int[] array)
+        {
+            bool isPrinted = false;
+
+            for (int i = 0; i < array.Length; i++)
             {
-                bool checkCurrentNumber = CheckNumber(index, array);
+                int sumLeft = GetSumForCurrentElement(array, i, "left");
+                int sumRight = GetSumForCurrentElement(array, i, "right");
 
-                if (checkCurrentNumber)
+                if (sumLeft == sumRight)
                 {
-                    found = true;
-                    Console.WriteLine(index);
+                    Console.WriteLine(i);
+                    isPrinted = true;
+                    break;
                 }
             }
 
-            if (!found)
+            if (!isPrinted)
             {
                 Console.WriteLine("no");
             }
-
         }
 
-        private static bool CheckNumber(int index, int[] array)
+        private static int GetSumForCurrentElement(int[] array, int index, string v)
         {
-            int sumBeforeIndex = 0;
+            int sum = 0;
 
-            for (int i = 0; i < index; i++)
+            switch (v)
             {
-                sumBeforeIndex += array[i];
+                case "left":
+                    for (int i = 0; i < index; i++)
+                    {
+                        sum += array[i];
+                    }
+                    break;
+
+                case "right":
+                    for (int i = index + 1; i < array.Length; i++)
+                    {
+                        sum += array[i];
+                    }
+                    break;
             }
 
-            int sumAfterIndex = 0;
-
-            for (int i = index + 1; i < array.Length; i++)
-            {
-                sumAfterIndex += array[i];
-            }
-
-            return (sumBeforeIndex == sumAfterIndex) ? true : false;
+            return sum;
         }
     }
 }

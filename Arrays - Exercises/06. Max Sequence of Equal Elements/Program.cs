@@ -10,66 +10,52 @@ namespace _06.Max_Sequence_of_Equal_Elements
     {
         static void Main(string[] args)
         {
-            int[] array = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+            string line1 = Console.ReadLine();
+            int[] array = line1.Split(' ').Select(int.Parse).ToArray();
+            int number = 0;
+            int count = 1;
 
-            int count = int.MinValue;
-            int value = 0;
-            bool found = false;
-
-            for (int i = 0; i < array.Length - 1; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                int currCount = GetMatchCount(i, array);
+                int tempNum = array[i];
+                int tempCount = 1;
 
-                if (currCount > count)
+                for (int j = i + 1; j < array.Length; j++)
                 {
-                    found = true;
-                    count = currCount;
-                    value = array[i];
+                    if (array[j] == array[i])
+                    {
+                        tempCount++;
+
+                        if (tempCount > count)
+                        {
+                            count = tempCount;
+                            number = tempNum;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
-            if (found)
-            {
-                PrintResult(true, value, count);
-            }
-            else
-            {
-                PrintResult(false, value, count);
-            }
+            PrintResult(number, count);
         }
 
-        private static void PrintResult(bool v, int value, int count)
+        private static void PrintResult(int number, int count)
         {
-            if (v)
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
+                if (i == count - 1)
                 {
-                    Console.Write(value + " ");
-                }
-            }
-            else
-            {
-                Console.WriteLine("No");
-            }
-        }
-
-        private static int GetMatchCount(int startIndex, int[] array)
-        {
-            int count = 0;
-
-            for (int currIndex = startIndex; currIndex < array.Length; currIndex++)
-            {
-                if (array[startIndex] == array[currIndex])
-                {
-                    count++;
+                    Console.Write(number);
                 }
                 else
                 {
-                    break;
+                    Console.Write(number + " ");
                 }
-            }
 
-            return count;
+            }
         }
     }
 }

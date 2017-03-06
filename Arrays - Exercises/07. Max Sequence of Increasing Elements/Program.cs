@@ -10,65 +10,45 @@ namespace _07.Max_Sequence_of_Increasing_Elements
     {
         static void Main(string[] args)
         {
-            int[] array = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+            string line1 = Console.ReadLine();
+            int[] array = line1.Split(' ').Select(int.Parse).ToArray();
 
-            int count = int.MinValue;
-            int startIndex = 0;
-            int endIndex = 0;
-            bool found = false;
+            List<int> values = GetLongestSequenceOfIncreasingElements(array);
+            Console.WriteLine(string.Join(" ", values));
+        }
+
+        private static List<int> GetLongestSequenceOfIncreasingElements(int[] array)
+        {
+            List<int> values = new List<int>();
+            int bestLength = 0;
 
             for (int i = 0; i < array.Length - 1; i++)
             {
-                int currCount = GetMatchCount(i, array);
+                int currLength = 0;
+                List<int> tempList = new List<int>();
+                tempList.Add(array[i]);
 
-                if (currCount > count)
+                for (int j = i; j < array.Length - 1; j++)
                 {
-                    found = true;
-                    count = currCount;
-                    startIndex = i;
-                    endIndex = i + currCount;
+                    if (array[j] < array[j + 1])
+                    {
+                        currLength++;
+                        tempList.Add(array[j + 1]);
+
+                        if (currLength > bestLength)
+                        {
+                            bestLength = currLength;
+                            values = tempList;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
-            if (found)
-            {
-                PrintResult(startIndex, endIndex, array);
-            }
-            else
-            {
-                Console.WriteLine("No");
-            }
-        }
-
-        private static void PrintResult(int start, int end, int[] array)
-        {
-            for (int i = start; i <= end; i++)
-            {
-                Console.Write(array[i] + " ");
-            }
-        }
-
-        private static int GetMatchCount(int startIndex, int[] array)
-        {
-            int count = 0;
-            int a = 0;
-
-            for (int currIndex = startIndex; startIndex + a + 1 != array.Length; currIndex++)
-            {
-                if (array[startIndex + a] < array[startIndex + a + 1])
-                {
-                    count++;
-                }
-                else
-                {
-                    break;
-                }
-
-                a++;
-            }
-
-            return count;
+            return values;
         }
     }
 }
-
