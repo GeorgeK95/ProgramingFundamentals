@@ -10,18 +10,14 @@ namespace _01.Remove_Negatives_and_Reverse
     {
         static void Main(string[] args)
         {
-            string values = Console.ReadLine();
-            List<int> numbers = values.Split(' ').Select(int.Parse).ToList();
+            List<int> numbers = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
 
-            numbers = RemoveNegativeNumbersFromList(numbers);
+            RemoveNegatives(numbers);
 
-            numbers.Reverse();
-
-            PrintList(numbers);
-            
+            Print(numbers);
         }
 
-        private static void PrintList(List<int> numbers)
+        private static void Print(List<int> numbers)
         {
             if (numbers.Count == 0)
             {
@@ -29,15 +25,12 @@ namespace _01.Remove_Negatives_and_Reverse
             }
             else
             {
-                for (int i = 0; i < numbers.Count; i++)
-                {
-                    Console.Write(numbers[i] + " ");
-                }
+                numbers.Reverse();
+                Console.WriteLine(string.Join(" ", numbers));
             }
-            
         }
 
-        private static List<int> RemoveNegativeNumbersFromList(List<int> numbers)
+        private static void RemoveNegatives(List<int> numbers)
         {
             for (int i = 0; i < numbers.Count; i++)
             {
@@ -47,8 +40,6 @@ namespace _01.Remove_Negatives_and_Reverse
                     i--;
                 }
             }
-
-            return numbers;
         }
     }
 }

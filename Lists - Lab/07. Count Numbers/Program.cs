@@ -10,38 +10,23 @@ namespace _07.Count_Numbers
     {
         static void Main(string[] args)
         {
-            List<int> inputList = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
+            string input = Console.ReadLine();
+            List<int> numbers = input.Split(' ').Select(int.Parse).ToList();
+            int[] counts = new int[1000];
 
-            CountNumbers(inputList);
-        }
-
-        private static void CountNumbers(List<int> inputList)
-        {
-            SortedDictionary<int, int> sortedDict = new SortedDictionary<int, int>();
-
-            for (int i = 0; i < inputList.Count; i++)
+            for (int i = 0; i < numbers.Count; i++)
             {
-                if (!sortedDict.ContainsKey(inputList[i]))
-                {
-                    sortedDict.Add(inputList[i], 1);
-                }
-                else
-                {
-                    int value = sortedDict[inputList[i]];
-                    sortedDict.Remove(inputList[i]);
-                    sortedDict.Add(inputList[i], value + 1);
-                }
+                int currentNumber = numbers[i];
+                counts[currentNumber]++;
             }
 
-            PrintElements(sortedDict);
-
-        }
-
-        private static void PrintElements(SortedDictionary<int, int> sortedDict)
-        {
-            foreach (KeyValuePair<int, int> pair in sortedDict)
+            for (int i = 0; i < counts.Length; i++)
             {
-                Console.WriteLine("{0} -> {1}", pair.Key, pair.Value);
+                if (counts[i] != 0)
+                {
+                    Console.WriteLine($"{i} -> {counts[i]}");
+                }
+                
             }
         }
     }

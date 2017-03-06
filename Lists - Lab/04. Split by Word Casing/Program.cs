@@ -10,155 +10,76 @@ namespace _04.Split_by_Word_Casing
     {
         static void Main(string[] args)
         {
-            char[] separators = new char[] { ',', ';', ':', '.', '!', '(', ')', '"', '\'', '\\', '/', '[', ']', ' ' };
+            char[] separators = new char[] { ',', ';', ':', '.', '!', '(', ')', '\"', '\\', '\'', '\\', '/', '[', ']', ',', ' ' };
+            string input = Console.ReadLine();
+            string[] words = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
-            List<string> input = Console.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> low = new List<string>();
+            List<string> up = new List<string>();
+            List<string> mixed = new List<string>();
 
-            List<string> lowCase = new List<string>();
-            List<string> upCase = new List<string>();
-            List<string> mixCase = new List<string>();
-
-            for (int i = 0; i < input.Count; i++)
+            for (int i = 0; i < words.Length; i++)
             {
-                string currWord = input[i];
-                string type = GetCaseType(currWord);
+                string type = GetWordType(words[i]);
 
-                if (type.Equals("lowCase"))
+                switch (type)
                 {
-                    lowCase.Add(currWord);
-                }
-                else if (type.Equals("upCase"))
-                {
-                    upCase.Add(currWord);
-                }
-                else
-                {
-                    mixCase.Add(currWord);
+                    case "up":
+                        up.Add(words[i]);
+                        break;
+                    case "down":
+                        low.Add(words[i]);
+                        break;
+                    case "mixed":
+                        mixed.Add(words[i]);
+                        break;
                 }
             }
 
-            PrintResult(lowCase, upCase, mixCase);
-
+            Print(low, mixed, up);
         }
 
-        private static void PrintResult(List<string> lowCase, List<string> upCase, List<string> mixCase)
+        private static string GetWordType(string v)
         {
-            PrintLower(lowCase);
-            Console.WriteLine();
-            PrintMixed(mixCase);
-            Console.WriteLine();
-            PrintUpper(upCase);
+            if (IsAllUpper(v))
+            {
+                return "up";
+            }
+            else if (IsAllLower(v))
+            {
+                return "down";
+            }
+
+            return "mixed";
         }
 
-        private static void PrintMixed(List<string> mixCase)
+        private static bool IsAllLower(string v)
         {
-            Console.Write("Mixed-case: ");
-
-            for (int i = 0; i < mixCase.Count; i++)
+            for (int i = 0; i < v.Length; i++)
             {
-                if (i == mixCase.Count - 1)
-                {
-                    Console.Write(mixCase[i]);
-                }
-                else
-                {
-                    Console.Write(mixCase[i] + ", ");
-                }
-
+                if (!Char.IsLower(v[i]))
+                    return false;
             }
+
+            return true;
         }
 
-        private static void PrintUpper(List<string> upCase)
+        static bool IsAllUpper(string input)
         {
-            Console.Write("Upper-case: ");
-
-            for (int i = 0; i < upCase.Count; i++)
+            for (int i = 0; i < input.Length; i++)
             {
-                if (i == upCase.Count - 1)
-                {
-                    Console.Write(upCase[i]);
-                }
-                else
-                {
-                    Console.Write(upCase[i] + ", ");
-                }
-
+                if (!Char.IsUpper(input[i]))
+                    return false;
             }
+
+            return true;
         }
 
-        private static void PrintLower(List<string> lowCase)
+        private static void Print(List<string> low, List<string> mixed, List<string> up)
         {
-            Console.Write("Lower-case: ");
-
-            for (int i = 0; i < lowCase.Count; i++)
-            {
-                if (i == lowCase.Count - 1)
-                {
-                    Console.Write(lowCase[i]);
-                }
-                else
-                {
-                    Console.Write(lowCase[i] + ", ");
-                }
-
-            }
-        }
-
-        private static string GetCaseType(string currWord)
-        {
-            string returnValue = null;
-
-            bool low = true;
-            bool up = true;
-            bool mixed = true;
-
-            for (int i = 0; i < currWord.Length; i++)
-            {
-                if (!IsLower(currWord[i]))
-                {
-                    low = false;
-                }
-                if (!IsUpper(currWord[i]))
-                {
-                    up = false;
-                }
-
-            }
-
-            if (!low && !up)
-            {
-                returnValue = "mixCase";
-            }
-            else if (low && !up)
-            {
-                returnValue = "lowCase";
-            }
-            else
-            {
-                returnValue = "upCase";
-            }
-
-            return returnValue;
-        }
-
-        private static bool IsUpper(char ch)
-        {
-            if ((int)ch >= 65 && (int)ch <= 90)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool IsLower(char ch)
-        {
-            if ((int)ch >= 97 && (int)ch <= 122)
-            {
-                return true;
-            }
-
-            return false;
+            Console.WriteLine($"Lower-case: {string.Join(", ", low)}");
+            Console.WriteLine($"Mixed-case: {string.Join(", ", mixed)}");
+            Console.WriteLine($"Upper-case: {string.Join(", ", up)}");
         }
     }
 }

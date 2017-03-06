@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{87CAD2D0-AB34-4E9B-938F-2713547CAE06}</ProjectGuid>
+    <ProjectGuid>{08D7BF76-AD9F-448D-A931-74CDCF0E2A7C}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>_04.Split_by_Word_Casing</RootNamespace>

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EE0ACE52-9E6C-4C36-A037-0BDC47877E3C}</ProjectGuid>
+    <ProjectGuid>{594AD761-8C78-45CC-B9D3-59B6A4F722BD}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>_07.Count_Numbers</RootNamespace>

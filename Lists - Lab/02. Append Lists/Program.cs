@@ -2,33 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Append_Lists
+namespace _02.Append_Lists
 {
-    class Append_Lists
+    class Program
     {
         static void Main(string[] args)
         {
-            List<string> input = Console.ReadLine().Split('|').ToList();
-            input.Reverse();
+            string input = Console.ReadLine();
+            List<string> res = new List<string>();
+            GetResultList(input, res);
+            Console.WriteLine(string.Join(" ", res));
+        }
 
-            List<string> result = new List<string>();
+        private static void GetResultList(string input, List<string> res)
+        {
+            StringBuilder current = new StringBuilder();
 
-            foreach (string item in input)
+            for (int i = 0; i < input.Length; i++)
             {
-                List<string> numbers = item.Split(' ').ToList();
-
-                foreach (string num in numbers)
+                if (input[i] != '|')
                 {
-                    if (num != "")
-                    {
-                        result.Add(num);
-                    }
+                    current.Append(input[i]);
                 }
-
+                else
+                {
+                    string[] tempArr = current.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    res.InsertRange(0, tempArr);
+                    current = new StringBuilder();
+                }
             }
-            Console.WriteLine(string.Join(" ", result));
+
+            string[] tempArr1 = current.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            res.InsertRange(0, tempArr1);
         }
     }
 }

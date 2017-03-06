@@ -10,39 +10,24 @@ namespace _06.Square_Numbers
     {
         static void Main(string[] args)
         {
-            List<int> input = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
-            List<int> squareNumber = new List<int>();
+            List<int> numbers = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
+            List<int> squares = GetSquares(numbers);
+            Console.WriteLine(string.Join(" ", squares.OrderByDescending(x => x)));
+        }
 
-            for (int i = 0; i < input.Count; i++)
+        private static List<int> GetSquares(List<int> numbers)
+        {
+            List<int> squares = new List<int>();
+
+            foreach (var number in numbers)
             {
-                if (IsSquare(input[i]))
+                if ((int)Math.Sqrt(number) == Math.Sqrt(number))
                 {
-                    squareNumber.Add(input[i]);
+                    squares.Add(number);
                 }
             }
 
-            PrintFinalResult(squareNumber);
-        }
-
-        private static void PrintFinalResult(List<int> squareNumber)
-        {
-            squareNumber.Sort();
-            squareNumber.Reverse();
-
-            for (int i = 0; i < squareNumber.Count; i++)
-            {
-                Console.Write(squareNumber[i] + " ");
-            }
-        }
-
-        private static bool IsSquare(int num)
-        {
-            if (Math.Sqrt(num) == (int)Math.Sqrt(num))
-            {
-                return true;
-            }
-
-            return false;
+            return squares;
         }
     }
 }
