@@ -10,33 +10,33 @@ namespace _01.Count_Real_Numbers
     {
         static void Main(string[] args)
         {
-            string input = Console.ReadLine();
-            double[] numbers = input.Split(' ').Select(double.Parse).ToArray();
+            double[] numbers = Console.ReadLine().Split().Select(double.Parse).ToArray();
             SortedDictionary<double, int> occurrences = new SortedDictionary<double, int>();
-
-            for (int i = 0; i < numbers.Length; i++)
-            {
-                double key = numbers[i];
-
-                if (occurrences.ContainsKey(key))
-                {
-                    occurrences[key] += 1;
-                }
-                else
-                {
-                    occurrences.Add(key, 1);
-                }
-            }
-
-            PrintDict(occurrences);
+            GetOccurrences(numbers, occurrences);
+            PrintOccurrences(occurrences);
 
         }
 
-        private static void PrintDict(SortedDictionary<double, int> occurrences)
+        private static void PrintOccurrences(SortedDictionary<double, int> occurrences)
         {
-            foreach (var item in occurrences)
+            foreach (var pair in occurrences)
             {
-                Console.WriteLine($"{item.Key} -> {item.Value}");
+                Console.WriteLine($"{pair.Key} -> {pair.Value}");
+            }
+        }
+
+        private static void GetOccurrences(double[] numbers, SortedDictionary<double, int> occurrences)
+        {
+            foreach (var number in numbers)
+            {
+                if (occurrences.ContainsKey(number))
+                {
+                    occurrences[number]++;
+                }
+                else
+                {
+                    occurrences.Add(number, 1);
+                }
             }
         }
     }

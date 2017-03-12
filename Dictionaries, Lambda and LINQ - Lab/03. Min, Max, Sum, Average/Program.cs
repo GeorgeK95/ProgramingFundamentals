@@ -11,44 +11,17 @@ namespace _03.Min__Max__Sum__Average
         static void Main(string[] args)
         {
             int n = int.Parse(Console.ReadLine());
-            var numbers = GetSetWithNumbers(n);
-
-            PrintResult(numbers);
+            List<int> numbers = new List<int>();
+            GetNumbers(numbers, n);
+            Console.WriteLine($"Sum = {numbers.Sum()}\nMin = {numbers.Min()}\nMax = {numbers.Max()}\nAverage = {numbers.Average()}");
         }
 
-        private static void PrintResult(SortedSet<double> numbers)
+        private static void GetNumbers(List<int> numbers, int n)
         {
-            double sum = GetSumOfSet(numbers);
-            double min = numbers.First();
-            double max = numbers.Last();
-            double average = sum / numbers.Count;
-
-            Console.WriteLine($"Sum = {sum}\nMin = {min}\nMax = {max}\nAverage = {average}");
-        }
-
-        private static double GetSumOfSet(SortedSet<double> numbers)
-        {
-            double res = 0;
-
-            foreach (double item in numbers)
-            {
-                res += item;
-            }
-
-            return res;
-        }
-
-        private static SortedSet<double> GetSetWithNumbers(int n)
-        {
-            SortedSet<double> numbers = new SortedSet<double>();
-
             for (int i = 0; i < n; i++)
             {
-                double currNum = double.Parse(Console.ReadLine());
-                numbers.Add(currNum);
+                numbers.Add(int.Parse(Console.ReadLine()));
             }
-
-            return numbers;
         }
     }
 }

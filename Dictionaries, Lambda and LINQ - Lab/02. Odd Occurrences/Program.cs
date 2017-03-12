@@ -8,68 +8,42 @@ namespace _02.Odd_Occurrences
 {
     class Program
     {
-
         static void Main(string[] args)
         {
-            string[] words = Console.ReadLine().Split(' ').ToArray();
-            words = ToLower(words);
-
-            Dictionary<string, int> dict = PerambulateWords(words);
-
-            PrintDict(dict);
+            string[] numbers = Console.ReadLine().ToUpper().Split();
+            Dictionary<string, int> occurrences = new Dictionary<string, int>();
+            GetOccurrences(numbers, occurrences);
+            PrintOccurrences(occurrences);
         }
 
-        private static string[] ToLower(string[] words)
+        private static void GetOccurrences(string[] numbers, Dictionary<string, int> occurrences)
         {
-            for (int i = 0; i < words.Length; i++)
+            foreach (var number in numbers)
             {
-                words[i] = words[i].ToLower();
-            }
-
-            return words;
-        }
-
-        private static void PrintDict(Dictionary<string, int> dict)
-        {
-            var results = new List<string>();
-
-            foreach (var pair in dict)
-            {
-                if (IsOdd(pair))
+                if (occurrences.ContainsKey(number))
                 {
-                    results.Add(pair.Key);
-                }
-            }
-            Console.WriteLine(string.Join(", ", results));
-        }
-
-        private static bool IsOdd(KeyValuePair<string, int> item)
-        {
-            if (item.Value % 2 == 0)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static Dictionary<string, int> PerambulateWords(string[] words)
-        {
-            Dictionary<string, int> wordsCount = new Dictionary<string, int>();
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                if (wordsCount.ContainsKey(words[i]))
-                {
-                    wordsCount[words[i]] += 1;
+                    occurrences[number]++;
                 }
                 else
                 {
-                    wordsCount.Add(words[i], 1);
+                    occurrences.Add(number, 1);
+                }
+            }
+        }
+
+        private static void PrintOccurrences(Dictionary<string, int> occurrences)
+        {
+            List<string> result = new List<string>();
+
+            foreach (var pair in occurrences)
+            {
+                if (pair.Value % 2 != 0)
+                {
+                    result.Add(pair.Key.ToLower());
                 }
             }
 
-            return wordsCount;
+            Console.WriteLine(string.Join(", ", result));
         }
     }
 }

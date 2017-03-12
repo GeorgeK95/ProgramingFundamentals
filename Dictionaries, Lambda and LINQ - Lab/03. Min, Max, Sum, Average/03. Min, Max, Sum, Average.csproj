@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1869F1E2-6D8B-4EE5-9694-666DC98EDB77}</ProjectGuid>
+    <ProjectGuid>{9A011D19-8EF7-4874-902C-1E7D999762DC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>_03.Min__Max__Sum__Average</RootNamespace>

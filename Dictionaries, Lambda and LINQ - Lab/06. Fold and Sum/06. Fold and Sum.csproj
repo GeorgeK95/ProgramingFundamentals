@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{792D23DF-5E6F-4BC1-92D4-0AB55B5FD457}</ProjectGuid>
+    <ProjectGuid>{A481DCAC-3283-4948-84F3-89C391BE6C67}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>_06.Fold_and_Sum</RootNamespace>

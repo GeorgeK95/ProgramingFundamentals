@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{85A878D3-76E7-416F-BA89-936866AC4A0E}</ProjectGuid>
+    <ProjectGuid>{E414C6C8-5C25-4EE2-A718-16BBBB97D46F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>_05.Short_Words_Sorted</RootNamespace>

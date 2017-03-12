@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EB9DB0DB-AE6A-4F3F-B8C3-E3937FF731D6}</ProjectGuid>
+    <ProjectGuid>{32A40BCE-1609-4C10-8C70-CEA38FC5C5AC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>_04.Largest_3_Numbers</RootNamespace>
