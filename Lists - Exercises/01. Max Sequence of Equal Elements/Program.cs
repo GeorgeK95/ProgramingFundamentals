@@ -10,37 +10,49 @@ namespace _01.Max_Sequence_of_Equal_Elements
     {
         static void Main(string[] args)
         {
-            List<int> inputList = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
-            int matches = int.MinValue;
-            int key = 0;
+            string input = Console.ReadLine();
+            int[] numbers = input.Split(' ').Select(int.Parse).ToArray();
+            FindMaxSequenceAndPrintIt(numbers);
+        }
 
-            for (int i = 0; i < inputList.Count - 1; i++)
+        private static void FindMaxSequenceAndPrintIt(int[] numbers)
+        {
+            int element = numbers[0];
+            int bestCount = 0;
+            int currCount = 0;
+
+            for (int i = 0; i < numbers.Length - 1; i++)
             {
-                int count = 0;
-
-                for (int j = i + 1; j < inputList.Count; j++)
+                if (numbers[i] == numbers[i + 1])
                 {
-                    if (inputList[i] == inputList[j])
+                    currCount++;
+                    if (currCount > bestCount)
                     {
-                        count++;
+                        bestCount = currCount;
+                        element = numbers[i];
                     }
-                    else
-                    {
-                        break;
-                    }
-                   
                 }
-                if (count > matches)
+                else
                 {
-                    matches = count;
-                    key = inputList[i];
+                    currCount = 0;
                 }
-
             }
 
-            for (int i = 0; i < matches + 1; i++)
+            PrintResult(bestCount, element);
+        }
+
+        private static void PrintResult(int bestCount, int element)
+        {
+            for (int i = 0; i <= bestCount; i++)
             {
-                Console.Write(key + " ");
+                if (i == bestCount)
+                {
+                    Console.Write(element);
+                }
+                else
+                {
+                    Console.Write(element + " ");
+                }
             }
         }
     }

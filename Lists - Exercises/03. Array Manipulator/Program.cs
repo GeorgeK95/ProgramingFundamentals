@@ -8,113 +8,133 @@ namespace _03.Array_Manipulator
 {
     class Program
     {
-        private static List<int> numbers;
-
         static void Main(string[] args)
         {
-            numbers = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
-            ExecuteCommands("");
-            PrintResult();
-        }
+            List<int> numbers = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
+            string command = Console.ReadLine();
 
-        private static void ExecuteCommands(string input)
-        {
-            input = Console.ReadLine();
-
-            switch (input.Split(' ')[0])
+            while (!command.Equals("print"))
             {
-                case "add":
-                    ExecuteAdd(input);
-                    ExecuteCommands("");
-                    break;
-                case "addMany":
-                    ExecuteAddMany(input);
-                    ExecuteCommands("");
-                    break;
-                case "contains":
-                    ExecuteContains(input);
-                    ExecuteCommands("");
-                    break;
-                case "remove":
-                    ExecuteRemove(numbers[int.Parse(input.Split(' ')[1])]);
-                    ExecuteCommands("");
-                    break;
-                case "shift":
-                    ExecuteShift(input);
-                    ExecuteCommands("");
-                    break;
-                case "sumPairs":
-                    ExecutSumPairs(input);
-                    ExecuteCommands("");
-                    break;                   
-            }
-        }
+                string[] splittedCommand = command.Split(' ');
 
-        private static void ExecuteShift(string input)
-        {
-            int shiftPosition = int.Parse(input.Split(' ')[1]);
-            int temp = 0;
-            for (int i = 0; i < shiftPosition; i++)
-            {
-                temp = numbers[0];
-                numbers.RemoveAt(0);
-                numbers.Add(temp);
-            }
-        }
+                if (splittedCommand[0].Equals("add"))
+                {
+                    ExecuteAddCommand(splittedCommand, numbers);
+                }
+                else if (splittedCommand[0].Equals("addMany"))
+                {
+                    ExecuteAddManyCommand(splittedCommand, numbers);
+                }
+                else if (splittedCommand[0].Equals("contains"))
+                {
+                    int index = ExecuteContains(splittedCommand, numbers);
+                    Console.WriteLine(index);
+                }
+                else if (splittedCommand[0].Equals("remove"))
+                {
+                    numbers.RemoveAt(int.Parse(splittedCommand[1]));
+                }
+                else if (splittedCommand[0].Equals("shift"))
+                {
+                    ExecuteShift(int.Parse(splittedCommand[1]), numbers);
+                }
+                else if (splittedCommand[0].Equals("sumPairs"))
+                {
+                    numbers = ExecuteSumPairs(numbers);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid command.");
+                }
 
-        private static void ExecuteRemove(int numberToRemove)
-        {
-            numbers.Remove(numberToRemove);
-        }
-
-        private static void ExecutSumPairs(string input)
-        {
-            for (int i = 1; i < numbers.Count; i += 2)
-            {
-                numbers[i - 1] += numbers[i];
-            }
-            for (int i = 1; i < numbers.Count; i++)
-            {
-                numbers.RemoveAt(i);
-            }
-        }
-
-        private static void ExecuteAddMany(string input)
-        {
-            List<string> splittedCommandAddMany = input.Split(' ').ToList();
-            int index = int.Parse(splittedCommandAddMany[1]);
-            List<int> elementsToBeAdded = new List<int>();
-
-            for (int i = 2; i < splittedCommandAddMany.Count; i++)
-            {
-                elementsToBeAdded.Add(int.Parse(splittedCommandAddMany[i]));
+                command = Console.ReadLine();
             }
 
-            numbers.InsertRange(index, elementsToBeAdded);
+            Print(numbers);
         }
 
-        private static void ExecuteAdd(string input)
-        {
-            List<string> splittedCommandAdd = input.Split(' ').ToList();
-            int index = int.Parse(splittedCommandAdd[1]);
-            int value = int.Parse(splittedCommandAdd[2]);
-
-            numbers.Insert(index, value);
-        }
-
-
-
-        private static void ExecuteContains(string input)
-        {
-            int numberToCheck = int.Parse(input.Split(' ')[1]);
-            Console.WriteLine(numbers.IndexOf(numberToCheck));
-        }
-
-        private static void PrintResult()
+        private static void Print(List<int> numbers)
         {
             Console.Write("[");
             Console.Write(string.Join(", ", numbers));
             Console.Write("]");
         }
+
+        public static List<int> ExecuteSumPairs(List<int> numbers)
+        {
+            List<int> temp = new List<int>();
+
+            for (int i = 0; i < numbers.Count; i += 2)
+            {
+                int first = numbers[i];
+                int second = 0;
+
+                if (i != numbers.Count - 1)
+                {
+                    second = numbers[i + 1];
+                }
+
+                temp.Add(first + second);
+            }
+
+            return temp;
+        }
+
+        private static void ExecuteShift(int count, List<int> numbers)
+        {
+            count %= numbers.Count;
+            List<int> temp = new List<int>();
+
+            for (int i = 0; i < count; i++)
+            {
+                temp.Add(numbers[0]);
+                numbers.RemoveAt(0);
+            }
+
+            for (int i = 0; i < temp.Count; i++)
+            {
+                numbers.Add(temp[i]);
+            }
+
+        }
+
+        private static int ExecuteContains(string[] splittedCommand, List<int> numbers)
+        {
+            int index = -1;
+            int searchedElement = int.Parse(splittedCommand[1]);
+
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                if (numbers[i] == searchedElement)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        }
+
+        private static void ExecuteAddManyCommand(string[] splittedCommand, List<int> numbers)
+        {
+            int index = int.Parse(splittedCommand[1]);
+            List<int> numberToBeAdded = new List<int>();
+
+            for (int i = 2; i < splittedCommand.Length; i++)
+            {
+                numberToBeAdded.Add(int.Parse(splittedCommand[i]));
+            }
+
+            numbers.InsertRange(index, numberToBeAdded);
+        }
+
+        private static void ExecuteAddCommand(string[] splittedCommand, List<int> numbers)
+        {
+            int index = int.Parse(splittedCommand[1]);
+            int numberToBeAdded = int.Parse(splittedCommand[2]);
+
+            numbers.Insert(index, numberToBeAdded);
+        }
     }
 }
+

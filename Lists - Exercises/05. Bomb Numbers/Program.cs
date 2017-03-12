@@ -8,56 +8,74 @@ namespace _05.Bomb_Numbers
 {
     class Program
     {
-        static List<int> numbers;
         static void Main(string[] args)
         {
-            numbers = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
-            List<int> numbers2 = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
+            string input = Console.ReadLine();
+            int[] numbers = input.Split(' ').Select(int.Parse).ToArray();
+            string input2 = Console.ReadLine();
+            int bomb = input2.Split(' ').Select(int.Parse).ToArray()[0];
+            int power = input2.Split(' ').Select(int.Parse).ToArray()[1];
 
-            int bomb = numbers2[0];
-            int power = numbers2[1];
-
-            for (int i = 0; i < numbers.Count; i++)
+            for (int i = 0; i < numbers.Length; i++)
             {
                 if (numbers[i] == bomb)
                 {
-                    Explode(numbers, i, power);
+                    Detonate(numbers, i, power);
+                    numbers[i] = 0;
                 }
             }
 
             PrintSum(numbers);
         }
 
-        private static void PrintSum(List<int> numbers)
+        private static void PrintSum(int[] numbers)
         {
             long sum = 0;
 
-            for (int i = 0; i < numbers.Count; i++)
+            foreach (var number in numbers)
             {
-                sum += numbers[i];
+                if (number != 0)
+                {
+                    sum += number;
+                }
             }
 
             Console.WriteLine(sum);
         }
 
-        private static void Explode(List<int> numbers, int i, int power)
+        private static void Detonate(int[] numbers, int i, int power)
         {
-            int startDestroing = i - power;
-            int endDestroing = i + power;
+            int start = i - power;
+            int end = i + power;
 
-            if (startDestroing < 0)
+            if (start < 0)
             {
-                startDestroing = 0;
+                start = 0;
             }
-            if (endDestroing > numbers.Count)
+            if (end > numbers.Length - 1)
             {
-                endDestroing = numbers.Count - 1;
+                end = numbers.Length - 1;
             }
 
-            for (int index = startDestroing; index <= endDestroing; index++)
+            DetonateLeft(numbers, start, i);
+            DetonateRight(numbers, end, i);
+        }
+
+        private static void DetonateRight(int[] numbers, int end, int i)
+        {
+            for (int j = i + 1; j <= end; j++)
             {
-                numbers[index] = 0;
+                numbers[j] = 0;
+            }
+        }
+
+        private static void DetonateLeft(int[] numbers, int start, int i)
+        {
+            for (int j = start; j < i; j++)
+            {
+                numbers[j] = 0;
             }
         }
     }
 }
+

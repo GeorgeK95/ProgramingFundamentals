@@ -10,23 +10,24 @@ namespace _04.Sum_Reversed_Numbers
     {
         static void Main(string[] args)
         {
-            List<int> numbers = Console.ReadLine().Split(' ').Select(int.Parse).ToList();
+            string input = Console.ReadLine();
+            int[] numbers = input.Split(' ').Select(int.Parse).ToArray();
             long sum = 0;
 
-            for (int i = 0; i < numbers.Count; i++)
+            foreach (var number in numbers)
             {
-                int currNum = numbers[i];
-
-                string currNumStr = currNum.ToString();
-                char[] charArray = currNumStr.ToCharArray();
-                Array.Reverse(charArray);
-
-                currNum = int.Parse(new string(charArray));
-
-                sum += currNum;
+                string num = number.ToString();
+                num = Reverse(num);
+                sum += int.Parse(num);
             }
 
             Console.WriteLine(sum);
+        }
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
     }
 }
