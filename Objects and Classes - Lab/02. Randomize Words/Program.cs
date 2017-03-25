@@ -11,21 +11,26 @@ namespace _02.Randomize_Words
         static void Main(string[] args)
         {
             string input = Console.ReadLine();
-            string[] words = input.Split(' ');
-
+            string[] splitted = input.Split(' ');
             Random rand = new Random();
 
-            for (int i = 0; i < words.Length; i++)
+            for (int i = 0; i < splitted.Length; i++)
             {
-                int indexFirst = rand.Next(0, words.Length);
-                int indexSecond = rand.Next(0, words.Length);
-
-                string helper = words[indexFirst];
-                words[indexFirst] = words[indexSecond];
-                words[indexSecond] = helper;
+                int index = rand.Next(0, splitted.Length - 1);
+                string temp = splitted[i];
+                splitted[i] = splitted[index];
+                splitted[index] = temp;
             }
 
-            Console.WriteLine(string.Join("\n", words));
+            Print(splitted);
+        }
+
+        private static void Print(string[] splitted)
+        {
+            foreach (var item in splitted)
+            {
+                Console.WriteLine(item);
+            }
         }
     }
 }

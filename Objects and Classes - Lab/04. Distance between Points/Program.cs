@@ -8,40 +8,51 @@ namespace _04.Distance_between_Points
 {
     class Point
     {
-        public int x { get; set; }
-        public int y { get; set; }
+        public double x { get; set; }
+        public double y { get; set; }
 
-        public static double CalcDistance(Point p1, Point p2)
+        public Point(double x, double y)
         {
-            double distance = 0;
-
-            double sideA = Math.Abs(p1.x - p2.x);
-            double sideB = Math.Abs(p1.y - p2.y);
-
-            distance = Math.Sqrt(sideA * sideA + sideB * sideB);
-
-            return distance;
+            this.x = x;
+            this.y = y;
         }
-    }
 
+    }
     class Program
     {
         static void Main(string[] args)
         {
-            string l1 = Console.ReadLine();
-            string l2 = Console.ReadLine();
+            string firstPoint = Console.ReadLine();
+            double x1 = GetX(firstPoint);
+            double y1 = GetY(firstPoint);
+            Point p1 = new Point(x1, y1);
 
-            Point p1 = new Point();
-            p1.x = int.Parse(l1.Split(' ')[0]);
-            p1.y = int.Parse(l1.Split(' ')[1]);
+            string secondPoint = Console.ReadLine();
+            double x2 = GetX(secondPoint);
+            double y2 = GetY(secondPoint);
+            Point p2 = new Point(x2, y2);
 
-            Point p2 = new Point();
-            p2.x = int.Parse(l2.Split(' ')[0]);
-            p2.y = int.Parse(l2.Split(' ')[1]);
+            double distance = CalculateDistance(p1, p2);
+            Console.WriteLine("{0:0.000}", distance);
+        }
+        public static double CalculateDistance(Point p1, Point p2)
+        {
+            double x = Math.Abs(p1.x - p2.x);
+            double y = Math.Abs(p1.y - p2.y);
 
-            double result = Point.CalcDistance(p1, p2);
+            return Math.Sqrt(x * x + y * y);
+        }
+        private static double GetY(string input)
+        {
+            string[] splitted = input.Split();
+            return double.Parse(splitted[1]);
+        }
 
-            Console.WriteLine("{0:f3}", result);
+        private static double GetX(string input)
+        {
+            string[] splitted = input.Split();
+            return double.Parse(splitted[0]);
         }
     }
 }
+

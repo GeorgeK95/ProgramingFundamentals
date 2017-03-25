@@ -11,20 +11,19 @@ namespace _03.Big_Factorial
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(recursive(int.Parse(Console.ReadLine())));
+            int n = int.Parse(Console.ReadLine());
+            BigInteger factorial = GetFactorial(n);
+            Console.WriteLine(factorial);
         }
 
-        private static BigInteger recursive(BigInteger n)
+        private static BigInteger GetFactorial(int n)
         {
             if (n == 1)
             {
                 return 1;
             }
-            else
-            {
-                BigInteger p = n * recursive(n - 1);
-                return p;
-            }
+
+            return GetFactorial(n - 1) * n;
         }
     }
 }

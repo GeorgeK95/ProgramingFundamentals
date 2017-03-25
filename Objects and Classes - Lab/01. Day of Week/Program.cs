@@ -11,10 +11,8 @@ namespace _01.Day_of_Week
     {
         static void Main(string[] args)
         {
-            string str = Console.ReadLine();
-
-            var date = DateTime.ParseExact(str, "d-M-yyyy", CultureInfo.InvariantCulture);
-
+            string input = Console.ReadLine();
+            DateTime date = DateTime.ParseExact(input, "d-M-yyyy", CultureInfo.InvariantCulture);
             Console.WriteLine(date.DayOfWeek);
         }
     }
