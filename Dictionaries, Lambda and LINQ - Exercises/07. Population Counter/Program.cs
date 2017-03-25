@@ -8,75 +8,68 @@ namespace _07.Population_Counter
 {
     class Program
     {
-        private static Dictionary<string, long> countryPop = new Dictionary<string, long>();
-        private static Dictionary<string, Dictionary<string, long>> mainDict = new Dictionary<string, Dictionary<string, long>>();
-
         static void Main(string[] args)
         {
-            string input = Console.ReadLine();
+            string text = Console.ReadLine();
+            Dictionary<string, Dictionary<string, long>> report = new Dictionary<string, Dictionary<string, long>>();
+            Dictionary<string, long> countryPopulation = new Dictionary<string, long>();
 
-            while (!input.Equals("report"))
+            while (!text.Equals("report"))
             {
-                string town = input.Split('|')[0];
-                string country = input.Split('|')[1];
-                long pop = long.Parse(input.Split('|')[2]);
+                string[] splitted = text.Split('|');
 
-                AddDataToDictionaries(town, country, pop);
+                string country = GetCountry(splitted);
+                string city = GetCity(splitted);
+                long pop = GetPopulation(splitted);
 
-                input = Console.ReadLine();
-            }
-
-            MakeOutput();
-        }
-
-        private static void AddDataToDictionaries(string town, string country, long pop)
-        {
-            if (!countryPop.ContainsKey(country))
-            {
-                countryPop.Add(country, pop);
-            }
-            else
-            {
-                countryPop[country] += pop;
-            }
-
-            if (!mainDict.ContainsKey(country))
-            {
-                Dictionary<string, long> pilot = new Dictionary<string, long>();
-                pilot.Add(town, pop);
-                mainDict.Add(country, pilot);
-            }
-            else
-            {
-                Dictionary<string, long> anotherPilot = mainDict[country];
-                anotherPilot.Add(town, pop);
-                mainDict[country] = anotherPilot;
-            }
-
-        }
-
-        private static void MakeOutput()
-        {
-            var sortedCountryPop = countryPop.OrderByDescending(TotalPopulation => TotalPopulation.Value);
-
-            foreach (var country in sortedCountryPop)
-            {
-                string currCountry = country.Key;
-                long currCountryPop = country.Value;
-                Console.WriteLine($"{currCountry} (total population: {currCountryPop})");
-
-                Dictionary<string, long> countryValue = mainDict[country.Key];  
-                var sortedCountryValue = countryValue.OrderByDescending(val => val.Value);
-
-                foreach (var item in sortedCountryValue)
+                if (!report.ContainsKey(country))
                 {
-                    string town = item.Key;
-                    long pop = item.Value;
+                    var temp = new Dictionary<string, long>();
+                    temp.Add(city, pop);
+                    report.Add(country, temp);
+                    countryPopulation.Add(country, pop);
+                }
+                else
+                {
+                    var temp = report[country];
+                    temp.Add(city, pop);
+                    report[country] = temp;
+                    countryPopulation[country] += pop;
+                }
 
-                    Console.WriteLine($"=>{town}: {pop}");
+                text = Console.ReadLine();
+            }
+
+            Print(report, countryPopulation);
+        }
+
+        private static void Print(Dictionary<string, Dictionary<string, long>> report, Dictionary<string, long> countryPopulation)
+        {
+            foreach (var country in countryPopulation.OrderByDescending(x => x.Value))
+            {
+                Console.WriteLine($"{country.Key} (total population: {country.Value})");
+
+                foreach (var currentCity in report[country.Key].OrderByDescending(x => x.Value))
+                {
+                    Console.WriteLine($"=>{currentCity.Key}: {currentCity.Value}");
                 }
             }
+        }
 
+
+        private static long GetPopulation(string[] splitted)
+        {
+            return long.Parse(splitted[2]);
+        }
+
+        private static string GetCountry(string[] splitted)
+        {
+            return splitted[1];
+        }
+
+        private static string GetCity(string[] splitted)
+        {
+            return splitted[0];
         }
     }
 }

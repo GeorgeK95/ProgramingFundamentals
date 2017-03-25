@@ -8,118 +8,119 @@ namespace _09.Legendary_Farming
 {
     class Program
     {
-        private static SortedDictionary<string, int> materials = new SortedDictionary<string, int>();
-        private static SortedDictionary<string, int> junk = new SortedDictionary<string, int>();
-
         static void Main(string[] args)
         {
-            string input = Console.ReadLine();
+            Dictionary<string, int> goodMaterials = new Dictionary<string, int>();
+            goodMaterials.Add("shards", 0);
+            goodMaterials.Add("fragments", 0);
+            goodMaterials.Add("motes", 0);
+            Dictionary<string, int> junk = new Dictionary<string, int>();
+            string text = Console.ReadLine().ToLower();
+            bool isOver = false;
 
-            // string[] splitted = input.Split(' ');
-            string winMaterial = string.Empty;
-
-            materials.Add("fragments", 0);
-            materials.Add("shards", 0);
-            materials.Add("motes", 0);
-            bool limit = true;
-
-            while (limit)
+            while (true)
             {
-                string[] splitted = input.Split(' ');
+                text = text.ToLower();
+
+                if (text == null)
+                {
+                    break;
+                }
+
+                string[] splitted = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 for (int i = 0; i < splitted.Length; i += 2)
                 {
                     int quantity = int.Parse(splitted[i]);
-                    string material = splitted[i + 1].ToLower();
+                    string material = splitted[i + 1];
 
-                    AddMaterialsInDictionaries(quantity, material);
-
-                    if (IsRaceOver())
+                    if (goodMaterials.ContainsKey(material))
                     {
-                        winMaterial = material;
-                        limit = false;
-                        break;
+                        goodMaterials[material] += quantity;
+
+                        if (isLimitReached(goodMaterials))
+                        {
+                            string winner = GetWinner(goodMaterials);
+                            Print(goodMaterials, junk, winner);
+                            isOver = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (junk.ContainsKey(material))
+                        {
+                            junk[material] += quantity;
+                        }
+                        else
+                        {
+                            junk.Add(material, quantity);
+                        }
                     }
                 }
 
-                input = Console.ReadLine();
-            }
-
-            PrintFinalResult(winMaterial);
-        }
-
-        private static void PrintFinalResult(string winMaterial)
-        {
-            var sortedMaterials = materials.OrderByDescending(pair => pair.Value);
-            Print(winMaterial, sortedMaterials);
-        }
-
-        private static void Print(string winMaterial, IOrderedEnumerable<KeyValuePair<string, int>> sortedMaterials)
-        {
-            string reward = string.Empty;
-
-            switch (winMaterial)
-            {
-                case "shards":
-                    reward = "Shadowmourne";
-                    break;
-                case "fragments":
-                    reward = "Valanyr";
-                    break;
-                case "motes":
-                    reward = "Dragonwrath";
-                    break;
-            }
-
-            if (winMaterial != null)
-            {
-                Console.WriteLine($"{reward} obtained!");
-            }
-
-            foreach (var currentMaterial in sortedMaterials)
-            {
-                Console.WriteLine($"{currentMaterial.Key}: {currentMaterial.Value}");
-            }
-            foreach (var currentJunkMaterial in junk)
-            {
-                Console.WriteLine($"{currentJunkMaterial.Key}: {currentJunkMaterial.Value}");
-            }
-        }
-
-        private static bool IsRaceOver()
-        {
-            foreach (var item in materials)
-            {
-                if (item.Value >= 250)
+                if (isOver)
                 {
-                    materials[item.Key] = item.Value - 250;
-                    return true;
+                    break;
                 }
+                text = Console.ReadLine().ToLower();
             }
-            return false;
         }
 
-        private static void AddMaterialsInDictionaries(int quantity, string material)
+        private static void Print(Dictionary<string, int> goodMaterials, Dictionary<string, int> junk, string winner)
         {
-            if (material.Equals("shards") || material.Equals("fragments") || material.Equals("motes"))
+            if (winner.Equals("shards"))
             {
-                int oldVal = materials[material];
-                int newVal = oldVal + quantity;
-                materials[material] = newVal;
+                Console.WriteLine("Shadowmourne" + " obtained!");
+            }
+            else if (winner.Equals("fragments"))
+            {
+                Console.WriteLine("Valanyr" + " obtained!");
             }
             else
             {
-                if (junk.ContainsKey(material))
+                Console.WriteLine("Dragonwrath" + " obtained!");
+            }
+            
+            goodMaterials[winner] -= 250;
+
+            foreach (var item in goodMaterials.OrderByDescending(x => x.Value).ThenBy(x => x.Key))
+            {
+                Console.WriteLine($"{item.Key}: {item.Value}");
+            }
+
+            foreach (var item in junk.OrderBy(x => x.Key))
+            {
+                Console.WriteLine($"{item.Key}: {item.Value}");
+            }
+        }
+
+        private static string GetWinner(Dictionary<string, int> goodMaterials)
+        {
+            string retValue = "";
+
+            foreach (var item in goodMaterials)
+            {
+                if (item.Value >= 250)
                 {
-                    int oldVal = junk[material];
-                    int newVal = oldVal + quantity;
-                    junk[material] = newVal;
-                }
-                else
-                {
-                    junk.Add(material, quantity);
+                    retValue = item.Key;
                 }
             }
+
+            return retValue;
+        }
+
+        private static bool isLimitReached(Dictionary<string, int> goodMaterials)
+        {
+            foreach (var item in goodMaterials)
+            {
+                if (item.Value >= 250)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

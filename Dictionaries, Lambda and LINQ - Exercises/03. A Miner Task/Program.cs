@@ -10,70 +10,44 @@ namespace _03.A_Miner_Task
     {
         static void Main(string[] args)
         {
-            var resources = FillResources();
-            PrintResources(resources);
-        }
-
-        private static void PrintResources(Dictionary<string, long> resources)
-        {
-            foreach (var currItem in resources)
-            {
-                Console.WriteLine($"{currItem.Key} -> {currItem.Value}");
-            }
-        }
-
-        private static Dictionary<string, long> FillResources()
-        {
-            int evenOddChecker = 1;
-            string lastLine = null;
-            Dictionary<string, long> resources = new Dictionary<string, long>();
+            string resources = "";
+            Dictionary<string, int> minerHolder = new Dictionary<string, int>();
 
             while (true)
             {
-                string line = Console.ReadLine();
+                resources = Console.ReadLine();
 
-
-                if (line.Equals("stop"))
+                if (resources.Equals("stop"))
                 {
                     break;
                 }
 
-                if (Odd(evenOddChecker))
-                {
-                    lastLine = line;
-
-                    if (!resources.ContainsKey(line))
-                    {
-                        resources.Add(line, 0);
-                    }
-
-                }
-                else
-                {
-                    long oldValue = 0;
-
-                    if (resources.ContainsKey(lastLine))
-                    {
-                        oldValue = resources[lastLine];
-                    }
-
-                    resources[lastLine] = long.Parse(line) + oldValue;
-                }
-
-                evenOddChecker++;
+                int quantity = int.Parse(Console.ReadLine());
+                AddResourses(minerHolder, resources, quantity);
             }
 
-            return resources;
+            Print(minerHolder);
         }
 
-        private static bool Odd(int evenOddChecker)
+        private static void Print(Dictionary<string, int> minerHolder)
         {
-            if (evenOddChecker % 2 == 0)
+            foreach (var pair in minerHolder)
             {
-                return false;
+                Console.WriteLine($"{pair.Key} -> {pair.Value}");
             }
-
-            return true;
         }
+
+        private static void AddResourses(Dictionary<string, int> minerHolder, string resources, int quantity)
+        {
+            if (minerHolder.ContainsKey(resources))
+            {
+                minerHolder[resources] += quantity;
+            }
+            else
+            {
+                minerHolder.Add(resources, quantity);
+            }
+        }
+
     }
 }

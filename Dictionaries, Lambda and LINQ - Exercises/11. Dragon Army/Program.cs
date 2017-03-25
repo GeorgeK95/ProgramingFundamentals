@@ -6,147 +6,201 @@ using System.Threading.Tasks;
 
 namespace _11.Dragon_Army
 {
+    class Stats
+    {
+        public double damage { get; set; }
+        public double health { get; set; }
+        public double armor { get; set; }
+
+        public Stats(double damage, double health, double armor)
+        {
+            this.damage = damage;
+            this.health = health;
+            this.armor = armor;
+        }
+        public Stats()
+        { }
+    }
     class Program
     {
-        private static Dictionary<string, SortedDictionary<string, int[]>> barrack = new Dictionary<string, SortedDictionary<string, int[]>>();
-
         static void Main(string[] args)
         {
+            Dictionary<string, Dictionary<string, Stats>> dragons = new Dictionary<string, Dictionary<string, Stats>>();
             int n = int.Parse(Console.ReadLine());
 
             for (int i = 0; i < n; i++)
             {
                 string line = Console.ReadLine();
-                string[] splitted = line.Split(' ');
 
-                AddStatsToBarrack(splitted);
+                string type = GetType(line);
+                string name = GetName(line);
+                Stats stats = GetStats(line);
+
+                AddDragonToDict(dragons, type, name, stats);
             }
 
-            PrintBarrack();
+            Print(dragons);
         }
 
-        private static void PrintBarrack()
+        private static void Print(Dictionary<string, Dictionary<string, Stats>> dragons)
         {
-            foreach (var type in barrack)
+            foreach (var type in dragons)
             {
-                double avgDamage = 0;
-                double avgHealth = 0;
-                double avgArmor = 0;
-                double delitel = type.Value.Count;
+                double typeDamage = GetTypeDamage(type.Value) / type.Value.Values.Count;
+                double typeHealth = GetTypeHealth(type.Value) / type.Value.Values.Count;
+                double typeArmor = GetTypeArmor(type.Value) / type.Value.Values.Count;
 
-                foreach (var stat in type.Value)
+                Console.WriteLine($"{type.Key}::({ string.Format("{0:0.00}", typeDamage)}/{ string.Format("{0:0.00}", typeHealth)}/{ string.Format("{0:0.00}", typeArmor)})");
+
+                foreach (var name in type.Value.OrderBy(x => x.Key))
                 {
-                    avgDamage += stat.Value[0];
-                    avgHealth += stat.Value[1];
-                    avgArmor += stat.Value[2];
+                    Console.WriteLine($"-{name.Key} -> damage: {name.Value.damage}, health: {name.Value.health}, armor: {name.Value.armor}");
                 }
-
-                avgDamage = Math.Round(avgDamage / (delitel), 2);
-                avgHealth = Math.Round(avgHealth / delitel, 2);
-                avgArmor = Math.Round(avgArmor / delitel, 2);
-
-                Console.WriteLine("{0:f2}::({1:f2}/{2:f2}/{3:f2})", type.Key, avgDamage, avgHealth, avgArmor);
-
-                foreach (var stat in type.Value)
-                {
-                    Console.WriteLine($"-{stat.Key} -> damage: {stat.Value[0]}, health: {stat.Value[1]}, armor: {stat.Value[2]}");
-                }
-
-
             }
         }
 
-        private static void AddStatsToBarrack(string[] splitted)
+        private static double GetTypeArmor(Dictionary<string, Stats> value)
         {
-            string type = splitted[0];
-            string name = splitted[1];
-            int damage = GetDamage(splitted[2]);
-            int health = GetHealth(splitted[3]);
-            int armor = GetArmor(splitted[4]);
+            double armor = 0;
 
-            if (!barrack.ContainsKey(type))
+            foreach (var name in value)
             {
-                SortedDictionary<string, int[]> newStats = new SortedDictionary<string, int[]>();
-                int[] statsArray = new int[3];
-                statsArray[0] = damage;
-                statsArray[1] = health;
-                statsArray[2] = armor;
-                newStats.Add(name, statsArray);
-                barrack.Add(type, newStats);
+                armor += name.Value.armor;
             }
-            else
-            {
-                SortedDictionary<string, int[]> prev = barrack[type];
-                int[] prevStatsArray = new int[3];
-                prevStatsArray[0] = damage;
-                prevStatsArray[1] = health;
-                prevStatsArray[2] = armor;
 
-                if (!prev.ContainsKey(name))
+            return armor;
+        }
+
+        private static double GetTypeHealth(Dictionary<string, Stats> value)
+        {
+            double health = 0;
+
+            foreach (var name in value)
+            {
+                health += name.Value.health;
+            }
+
+            return health;
+        }
+
+        private static double GetTypeDamage(Dictionary<string, Stats> value)
+        {
+            double damage = 0;
+
+            foreach (var name in value)
+            {
+                damage += name.Value.damage;
+            }
+
+            return damage;
+        }
+
+        private static void AddDragonToDict(Dictionary<string, Dictionary<string, Stats>> dragons, string type, string name, Stats stats)
+        {
+            if (dragons.ContainsKey(type))
+            {
+                Dictionary<string, Stats> temp = dragons[type];
+
+                if (temp.ContainsKey(name))
                 {
-                    prev.Add(name, prevStatsArray);
-                    barrack[type] = prev;
+                    Stats old = temp[name];
+                    FillCurrentStatsObject(old, stats);
+                    temp[name] = old;
                 }
                 else
                 {
-                    int[] newStatsArray = prev[name];
-                    newStatsArray[0] = damage;
-                    newStatsArray[1] = health;
-                    newStatsArray[2] = armor;
-                    prev[name] = newStatsArray;
-                    barrack[type] = prev;
+                    Stats newStats = new Stats();
+                    FillCurrentStatsObject(newStats, stats);
+                    temp[name] = newStats;   
                 }
-
-            }
-
-        }
-
-        private static int GetArmor(string v)
-        {
-            int returnValue = 0;
-
-            if (!v.Equals("null"))
-            {
-                returnValue = int.Parse(v);
+                dragons[type] = temp;
             }
             else
             {
-                returnValue = 10;
+                Stats newStats = new Stats();
+                FillCurrentStatsObject(newStats, stats);
+                Dictionary<string, Stats> newDict = new Dictionary<string, Stats>();
+                newDict.Add(name, newStats);
+                dragons.Add(type, newDict);
             }
-
-            return returnValue;
         }
 
-        private static int GetHealth(string v)
+        private static void FillCurrentStatsObject(Stats old, Stats stats)
         {
-            int returnValue = 0;
-
-            if (!v.Equals("null"))
+            if (stats.damage.Equals("null"))
             {
-                returnValue = int.Parse(v);
+                old.damage = 45;
             }
             else
             {
-                returnValue = 250;
+                old.damage = stats.damage;
             }
-
-            return returnValue;
-        }
-
-        private static int GetDamage(string v)
-        {
-            int returnValue = 0;
-
-            if (!v.Equals("null"))
+            if (stats.health.Equals("null"))
             {
-                returnValue = int.Parse(v);
+                old.health = 250;
             }
             else
             {
-                returnValue = 45;
+                old.health = stats.health;
+            }
+            if (stats.armor.Equals("null"))
+            {
+                old.armor = 10;
+            }
+            else
+            {
+                old.armor = stats.armor;
+            }
+        }
+
+        private static Stats GetStats(string line)
+        {
+            string[] splitted = line.Split(' ');
+
+            double damage = 0;
+            double health = 0;
+            double armor = 0;
+
+            if (splitted[2].Equals("null"))
+            {
+                damage = 45;
+            }
+            else
+            {
+                damage = double.Parse(splitted[2]);
+            }
+            if (splitted[3].Equals("null"))
+            {
+                health = 250;
+            }
+            else
+            {
+                health = double.Parse(splitted[3]);
+            }
+            if (splitted[4].Equals("null"))
+            {
+                armor = 10;
+            }
+            else
+            {
+                armor = double.Parse(splitted[4]);
             }
 
-            return returnValue;
+            Stats stats = new Stats(damage, health, armor);
+            return stats;
         }
+
+        private static string GetName(string line)
+        {
+            string[] splitted = line.Split(' ');
+            return splitted[1];
+        }
+
+        private static string GetType(string line)
+        {
+            string[] splitted = line.Split(' ');
+            return splitted[0];
+        }
+
     }
 }

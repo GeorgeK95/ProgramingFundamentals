@@ -8,71 +8,77 @@ namespace _06.User_Logs
 {
     class Program
     {
-        private static SortedDictionary<string, Dictionary<string, int>> userLogs = new SortedDictionary<string, Dictionary<string, int>>();
-
         static void Main(string[] args)
         {
-            while (true)
+            string line = Console.ReadLine();
+            Dictionary<string, Dictionary<string, int>> data = new Dictionary<string, Dictionary<string, int>>();
+
+            while (!line.Equals("end"))
             {
-                string line = Console.ReadLine();
+                string name = GetName(line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[2]);
+                string ip = GetIp(line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0]);
 
-                if (line.Equals("end"))
+                if (!data.ContainsKey(name))
                 {
-                    PrintResult();
-                    break;
-                }
-
-                string[] arr = line.Split(' ');
-
-                string ip = arr[0].Replace("IP=", "");
-                string userName = arr[2].Replace("user=", "");
-
-                if (!userLogs.ContainsKey(userName))
-                {
-                    Dictionary<string, int> newInsertDict = new Dictionary<string, int>();
-                    newInsertDict.Add(ip, 1);
-                    userLogs.Add(userName, newInsertDict);
+                    var temp = new Dictionary<string, int>();
+                    temp.Add(ip, 1);
+                    data.Add(name, temp);
                 }
                 else
                 {
-                    Dictionary<string, int> info = userLogs[userName];
+                    var temp = data[name];
 
-                    if (info.ContainsKey(ip))
+                    if (!temp.ContainsKey(ip))
                     {
-                        int count = info[ip];
-                        info[ip] = count + 1;
+                        temp.Add(ip, 1);
+                        data[name] = temp;
                     }
                     else
                     {
-                        info.Add(ip, 1);
+                        temp[ip]++;
+                        data[name] = temp;
+                    }
+                }
+
+                line = Console.ReadLine();
+            }
+
+            Print(data);
+        }
+
+        private static void Print(Dictionary<string, Dictionary<string, int>> data)
+        {
+            foreach (var name in data.OrderBy(x => x.Key))
+            {
+                Console.WriteLine(name.Key + ": ");
+                int limit = name.Value.Count;
+
+                foreach (var ip in name.Value)
+                {
+                    limit--;
+                    Console.Write($"{ip.Key} => {ip.Value}");
+                    if (limit == 0)
+                    {
+                        Console.WriteLine(".");
+                    }
+                    else
+                    {
+                        Console.Write(", ");
                     }
 
-                    userLogs[userName] = info;
                 }
+
             }
         }
 
-        private static void PrintResult()
+        private static string GetName(string v)
         {
-            foreach (var currUser in userLogs)
-            {
-                Console.WriteLine("{0}: ", currUser.Key);
-                int a = currUser.Value.Count;
+            return v.Substring(5);
+        }
 
-                foreach (var currUserInfo in currUser.Value)
-                {
-                    if (a == 1)
-                    {
-                        Console.WriteLine($"{currUserInfo.Key} => {currUserInfo.Value}.");
-                    }
-                    else
-                    {
-                        Console.Write($"{currUserInfo.Key} => {currUserInfo.Value}, ");
-                    } 
-                    a--;
-                }
-
-            }
+        private static string GetIp(string v)
+        {
+            return v.Substring(3);
         }
     }
 }

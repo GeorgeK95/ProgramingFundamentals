@@ -8,230 +8,88 @@ namespace _05.Hands_of_Cards
 {
     class Program
     {
-        private static Dictionary<string, long> results = new Dictionary<string, long>();
-        private static Dictionary<string, List<string>> hands = new Dictionary<string, List<string>>();
-
         static void Main(string[] args)
         {
-            char[] separators = new char[] { ' ', ',' };
+            string line = Console.ReadLine();
+            Dictionary<string, List<int>> deck = new Dictionary<string, List<int>>();
+            Dictionary<string, int> typesDict = DeclarateTypesDictionary();
 
-            while (true)
+            while (!line.Equals("JOKER"))
             {
-                string line = Console.ReadLine();
+                string name = line.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                string[] cardsArray = GetCards(line.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries)[1]);
 
-                if (line.Equals("JOKER"))
+                foreach (var currentCard in cardsArray)
                 {
-                    CalculateAndPrint();
-                    break;
-                }
-                string[] splitted = line.Split(':').ToArray();
-                string[] cards = splitted[1].Split(separators, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    string type = currentCard[currentCard.Length - 1].ToString();
+                    int power = GetPower(currentCard, typesDict);
+                    var temp = new List<int>();
 
-                string personName = splitted[0];
-                AddCardsInDictionary(cards, personName);
-
-            }
-
-        }
-
-        private static void CalculateAndPrint()
-        {
-            foreach (var person in hands)
-            {
-                string name = person.Key;
-                List<string> cards = person.Value;
-                long cardsPower = CalculateCurrentPersonHandPower(cards);
-
-                Console.WriteLine($"{person.Key}: {cardsPower}");
-            }
-        }
-
-        private static long CalculateCurrentPersonHandPower(List<string> cards)
-        {
-            long totalResult = 0;
-
-            foreach (var currCard in cards)
-            {
-                string power = currCard.Substring(0, currCard.Length - 1);
-                string type = currCard.Substring(currCard.Length - 1);
-
-                int powerValue = CalculatePower(power);
-                int typeValue = CalculateValue(type);
-
-                long totalPower = powerValue * typeValue;
-                totalResult += totalPower;
-
-            }
-
-            return totalResult;
-        }
-
-        private static int CalculateValue(string type)
-        {
-            int result = 0;
-
-            switch (type)
-            {
-                case "S":
-                    result = 4;
-                    break;
-                case "H":
-                    result = 3;
-                    break;
-                case "D":
-                    result = 2;
-                    break;
-                case "C":
-                    result = 1;
-                    break;
-            }
-
-            return result;
-        }
-
-        private static int CalculatePower(string power)
-        {
-            int result = 0;
-
-            switch (power)
-            {
-                case "2":
-                    result = 2;
-                    break;
-                case "3":
-                    result = 3;
-                    break;
-                case "4":
-                    result = 4;
-                    break;
-                case "5":
-                    result = 5;
-                    break;
-                case "6":
-                    result = 6;
-                    break;
-                case "7":
-                    result = 7;
-                    break;
-                case "8":
-                    result = 8;
-                    break;
-                case "9":
-                    result = 9;
-                    break;
-                case "10":
-                    result = 10;
-                    break;
-                case "J":
-                    result = 11;
-                    break;
-                case "Q":
-                    result = 12;
-                    break;
-                case "K":
-                    result = 13;
-                    break;
-                case "A":
-                    result = 14;
-                    break;
-            }
-
-            return result;
-        }
-
-        private static void AddCardsInDictionary(string[] splittedClearLine, string name)
-        {
-            for (int i = 0; i < splittedClearLine.Length; i++)
-            {
-                string currCard = splittedClearLine[i];
-
-                if (hands.ContainsKey(name))
-                {
-                    List<string> currCardDeck = hands[name];
-
-                    if (!currCardDeck.Contains(currCard))
+                    if (deck.ContainsKey(name))
                     {
-                        currCardDeck.Add(currCard);
+                        temp = deck[name];
+
+                        if (!temp.Contains(power * typesDict[type]))
+                        {
+                            temp.Add(power * typesDict[type]);
+                            deck[name] = temp;
+                        }
+
                     }
+                    if (!temp.Contains(power * typesDict[type]))
+                    {
+                        temp.Add(power * typesDict[type]);
+                        deck[name] = temp;
+                    }
+                }
 
-                    hands[name] = currCardDeck;
-                }
-                else
-                {
-                    List<string> newCardDeck = new List<string>();
-                    newCardDeck.Add(currCard);
-                    hands.Add(name, newCardDeck);
-                }
+                line = Console.ReadLine();
+            }
+
+            Print(deck);
+        }
+
+        private static void Print(Dictionary<string, List<int>> deck)
+        {
+            foreach (var pair in deck)
+            {
+                Console.WriteLine($"{pair.Key}: {pair.Value.Sum()}");
             }
         }
 
-        private static int CalculateValue(char type)
+        private static Dictionary<string, int> DeclarateTypesDictionary()
         {
-            int typeVal = 0;
-
-            switch (type)
-            {
-                case 'C':
-                    typeVal = 1;
-                    break;
-                case 'D':
-                    typeVal = 2;
-                    break;
-                case 'H':
-                    typeVal = 3;
-                    break;
-                default:
-                    typeVal = 4;
-                    break;
-            }
-
-            return typeVal;
+            var typesDict = new Dictionary<string, int>();
+            typesDict.Add("S", 4);
+            typesDict.Add("H", 3);
+            typesDict.Add("D", 2);
+            typesDict.Add("C", 1);
+            return typesDict;
         }
 
-        private static int CalculatePower(char power)
+        private static int GetPower(string currentCard, Dictionary<string, int> typesDict)
         {
-            int ascii = (int)power;
-            int pow = 0;
+            Dictionary<string, int> powers = new Dictionary<string, int>();
+            powers.Add("J", 11);
+            powers.Add("Q", 12);
+            powers.Add("K", 13);
+            powers.Add("A", 14);
 
-            if (ascii >= 50 && ascii <= 57)
+            string powerStr = currentCard.Substring(0, currentCard.Length - 1);
+
+            if (powers.ContainsKey(powerStr))
             {
-                pow = int.Parse(power.ToString());
-            }
-            else
-            {
-                switch (power)
-                {
-                    case 'J':
-                        pow = 11;
-                        break;
-                    case 'Q':
-                        pow = 12;
-                        break;
-                    case 'K':
-                        pow = 13;
-                        break;
-                    default:
-                        pow = 14;
-                        break;
-                }
+                return powers[powerStr];
             }
 
-            return pow;
+            return int.Parse(powerStr.ToString());
         }
 
-        private static string[] ClearEmptyLines(string[] splitted)
+        private static string[] GetCards(string v)
         {
-            List<string> a = new List<string>();
-
-            for (int i = 0; i < splitted.Length; i++)
-            {
-                if (splitted[i] != "")
-                {
-                    a.Add(splitted[i]);
-                }
-            }
-
-            return a.ToArray();
+            v = v.Trim();
+            string[] cards = v.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return cards;
         }
     }
 }

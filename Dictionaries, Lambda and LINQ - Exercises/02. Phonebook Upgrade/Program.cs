@@ -10,72 +10,65 @@ namespace _02.Phonebook_Upgrade
     {
         static void Main(string[] args)
         {
-            Dictionary<string, string> phoneBook = new Dictionary<string, string>();
+            string command = Console.ReadLine();
+            SortedDictionary<string, string> phoneBook = new SortedDictionary<string, string>();
 
-            while (true)
+            while (!command.Equals("END"))
             {
-                string[] arrayPhonebookCommands = Console.ReadLine().Split(' ').ToArray();
-                string command = arrayPhonebookCommands[0];
+                string[] splittedCommand = command.Split();
 
-                if (command.Equals("END"))
+                if (splittedCommand[0].Equals("A"))
                 {
-                    break;
+                    AddContact(phoneBook, splittedCommand);
+                }
+                else if (splittedCommand[0].Equals("S"))
+                {
+                    SearchContact(phoneBook, splittedCommand);
+                }
+                else if (splittedCommand[0].Equals("ListAll"))
+                {
+                    PrintListedPhoneBook(phoneBook);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid command");
                 }
 
-                switch (command)
-                {
-                    case "A":
-                        AddContactToPhoneBook(phoneBook, arrayPhonebookCommands);
-                        break;
-                    case "S":
-                        SearchContactToPhoneBook(phoneBook, arrayPhonebookCommands);
-                        break;
-                    case "ListAll":
-                        PrintListedPhoneBook(phoneBook);
-                        break;
-                }
+                command = Console.ReadLine();
             }
         }
 
-        private static void PrintListedPhoneBook(Dictionary<string, string> phoneBook)
+        private static void PrintListedPhoneBook(SortedDictionary<string, string> phoneBook)
         {
-            var list = phoneBook.Keys.ToList();
-            list.Sort();
-
-            foreach (var key in list)
+            foreach (var item in phoneBook)
             {
-                Console.WriteLine("{0} -> {1}", key, phoneBook[key]);
+                Console.WriteLine($"{item.Key} -> {item.Value}");
             }
         }
 
-        private static void SearchContactToPhoneBook(Dictionary<string, string> phoneBook, string[] arrayPhonebookCommands)
+        private static void SearchContact(SortedDictionary<string, string> phoneBook, string[] splittedCommand)
         {
-            string nameSearch = arrayPhonebookCommands[1];
-
-            if (phoneBook.ContainsKey(nameSearch))
+            if (phoneBook.ContainsKey(splittedCommand[1]))
             {
-                Console.WriteLine($"{nameSearch} -> {phoneBook[nameSearch]}");
+                Console.WriteLine($"{splittedCommand[1]} -> {phoneBook[splittedCommand[1]]}");
             }
             else
             {
-                Console.WriteLine($"Contact {nameSearch} does not exist.");
+                Console.WriteLine($"Contact {splittedCommand[1]} does not exist.");
             }
         }
 
-        private static void AddContactToPhoneBook(Dictionary<string, string> phoneBook, string[] arrayPhonebookCommands)
+        private static void AddContact(SortedDictionary<string, string> phoneBook, string[] splittedCommand)
         {
-            string nameAdd = arrayPhonebookCommands[1];
-            string telNum = arrayPhonebookCommands[2];
-
-            if (!phoneBook.ContainsKey(nameAdd))
+            if (phoneBook.ContainsKey(splittedCommand[1]))
             {
-                phoneBook.Add(nameAdd, telNum);
+                phoneBook[splittedCommand[1]] = splittedCommand[2];
             }
             else
             {
-                phoneBook[nameAdd] = telNum;
+                phoneBook.Add(splittedCommand[1], splittedCommand[2]);
             }
         }
+
     }
 }
-

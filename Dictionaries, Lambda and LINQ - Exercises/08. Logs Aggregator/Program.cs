@@ -8,84 +8,51 @@ namespace _08.Logs_Aggregator
 {
     class Program
     {
-        private static SortedDictionary<string, SortedDictionary<string, int>> logs = new SortedDictionary<string, SortedDictionary<string, int>>();
-
         static void Main(string[] args)
         {
             int n = int.Parse(Console.ReadLine());
+            Dictionary<string, long> nameDuration = new Dictionary<string, long>();
+            Dictionary<string, List<string>> nameIpList = new Dictionary<string, List<string>>();
 
             for (int i = 0; i < n; i++)
             {
-                string line = Console.ReadLine();
+                string text = Console.ReadLine();
+                string[] splitted = text.Split(' ');
 
-                string ip = line.Split(' ')[0];
-                string user = line.Split(' ')[1];
-                int duration = int.Parse(line.Split(' ')[2]);
+                string ip = splitted[0];
+                string name = splitted[1];
+                long duration = long.Parse(splitted[2]);
 
-                if (!logs.ContainsKey(user))
+                if (!nameDuration.ContainsKey(name))
                 {
-                    SortedDictionary<string, int> dict = new SortedDictionary<string, int>();
-                    dict.Add(ip, duration);
-                    logs.Add(user, dict);
+                    nameDuration.Add(name, duration);
+                    var tempList = new List<string>();
+                    tempList.Add(ip);
+                    nameIpList.Add(name, tempList);
                 }
                 else
                 {
-                    SortedDictionary<string, int> info = logs[user];
+                    var tempList = nameIpList[name];
 
-                    if (!info.ContainsKey(ip))
+                    if (!tempList.Contains(ip))
                     {
-                        info.Add(ip, duration);
-                    }
-                    else
-                    {
-                        int oldDuration = info[ip];
-                        int newDuration = oldDuration + duration;
-                        info[ip] = newDuration;
-                        logs[user] = info;
+                        tempList.Add(ip);
                     }
 
+                    nameDuration[name] += duration;
                 }
             }
 
-            PrintLogs();
+            Print(nameDuration, nameIpList);
         }
 
-        private static void PrintLogs()
+        private static void Print(Dictionary<string, long> nameDuration, Dictionary<string, List<string>> nameIpList)
         {
-            foreach (var user in logs)
+            foreach (var nameDurPair in nameDuration.OrderBy(x => x.Key))
             {
-                int total = GetDuration(user.Value);
-                Console.Write($"{user.Key}: {total} [");
-
-                int countForComma = user.Value.Count;
-
-                foreach (var item in user.Value)
-                {
-                    if (countForComma == 1)
-                    {
-                        Console.Write($"{item.Key}");
-                    }
-                    else
-                    {
-                        Console.Write($"{item.Key}, ");
-                    }
-                    countForComma--;
-                }
-
-                Console.WriteLine("]");
+                Console.Write($"{nameDurPair.Key}: {nameDurPair.Value} ");
+                Console.WriteLine("[" + string.Join(", ", nameIpList[nameDurPair.Key].OrderBy(x => x)) + "]");
             }
-        }
-
-        private static int GetDuration(SortedDictionary<string, int> value)
-        {
-            int res = 0;
-
-            foreach (var item in value)
-            {
-                res += item.Value;
-            }
-
-            return res;
         }
     }
 }

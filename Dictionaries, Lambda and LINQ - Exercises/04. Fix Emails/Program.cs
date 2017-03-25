@@ -14,47 +14,44 @@ namespace _04.Fix_Emails
 
             while (true)
             {
-                string littleName = Console.ReadLine();
+                string name = Console.ReadLine();
                 string email = Console.ReadLine();
-                //string bigName = Console.ReadLine();
 
-                if (!littleName.Equals("stop"))
-                {
-                    bool isDomaineGood = GetDomaine(email);
-
-                    if (isDomaineGood)
-                    {
-                        emails.Add(littleName, email);
-                    }
-                }
-                else
+                if (name.Equals("stop"))
                 {
                     break;
                 }
+
+                if (CheckEmail(email))
+                {
+                    AddToEmails(name, email, emails);
+                }
             }
 
-            PrintEmails(emails);
+            Print(emails);
         }
 
-        private static bool GetDomaine(string email)
+        private static void Print(Dictionary<string, string> emails)
         {
-            string domaine = "";
-
-            for (int i = email.Length; i > email.Length - 2; i--)
+            foreach (var pair in emails)
             {
-                domaine += email[i - 1];
+                Console.WriteLine($"{pair.Key} -> {pair.Value}");
             }
-
-            Reverse(domaine);
-
-            if (!domaine.Equals("us") || !domaine.Equals("uk"))
-            {
-                return true;
-            }
-
-            return false;
         }
 
+        private static bool CheckEmail(string email)
+        {
+            email = Reverse(email);
+            string domaine = email[0] + "" + email[1];
+            domaine = Reverse(domaine);
+
+            if (domaine.Equals("us") || domaine.Equals("uk"))
+            {
+                return false;
+            }
+
+            return true;
+        }
         public static string Reverse(string s)
         {
             char[] charArray = s.ToCharArray();
@@ -62,11 +59,15 @@ namespace _04.Fix_Emails
             return new string(charArray);
         }
 
-        private static void PrintEmails(Dictionary<string, string> emails)
+        private static void AddToEmails(string name, string email, Dictionary<string, string> emails)
         {
-            foreach (var currItem in emails)
+            if (emails.ContainsKey(name))
             {
-                Console.WriteLine($"{currItem.Key} -> {currItem.Value}");
+                emails[name] = email;
+            }
+            else
+            {
+                emails.Add(name, email);
             }
         }
     }
