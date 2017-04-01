@@ -12,12 +12,12 @@ namespace _02.Count_Substring_Occurrences
         {
             string text = Console.ReadLine();
             string subString = Console.ReadLine();
-            int count = GetSubstringOccurrences(text, subString);
+            int count = GetSubStringOccurrences(text, subString);
 
             Console.WriteLine(count);
         }
 
-        private static int GetSubstringOccurrences(string text, string subString)
+        private static int GetSubStringOccurrences(string text, string subString)
         {
             int p = 0;
 

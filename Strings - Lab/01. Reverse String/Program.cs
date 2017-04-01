@@ -4,22 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Strings___Lab
+namespace _01.Reverse_String
 {
     class Program
     {
         static void Main(string[] args)
         {
             string input = Console.ReadLine();
-            string inputReversed = Reverse(input);
-            Console.WriteLine(inputReversed);
+            Console.WriteLine(Reverse(input));
         }
-
-        private static string Reverse(string input)
+        public static string Reverse(string s)
         {
-            char[] inputArr = input.ToCharArray();
-            Array.Reverse(inputArr);
-            return new string(inputArr);
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
     }
 }

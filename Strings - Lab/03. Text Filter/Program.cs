@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace _03.Text_Filter
@@ -10,15 +11,13 @@ namespace _03.Text_Filter
     {
         static void Main(string[] args)
         {
-            string[] banWords = Console.ReadLine().Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            string[] words = Console.ReadLine().Split(new char[] { ',', ' ' },StringSplitOptions.RemoveEmptyEntries);
             string text = Console.ReadLine();
 
-            foreach (var word in banWords)
+            for (int i = 0; i < words.Length; i++)
             {
-                if (text.Contains(word))
-                {
-                    text = text.Replace(word, new string('*', word.Length));
-                }
+                string stars = new string('*', words[i].Length);
+                text = Regex.Replace(text, words[i], stars);
             }
 
             Console.WriteLine(text);

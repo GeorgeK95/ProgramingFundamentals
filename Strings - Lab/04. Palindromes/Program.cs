@@ -12,73 +12,31 @@ namespace _04.Palindromes
         {
             char[] separators = new char[] { ' ', '!', '.', ',', '\\', '/', '?' };
             string[] text = Console.ReadLine().Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            List<string> words = new List<string>();
+            List<string> palindromes = new List<string>();
 
             for (int i = 0; i < text.Length; i++)
             {
-                string currWord = text[i];
-
-                if (IsPalindrome(currWord) && !words.Contains(currWord))
+                if (IsWordPalindrome(text[i]))
                 {
-                    words.Add(currWord);
+                    palindromes.Add(text[i]);
                 }
             }
 
-            Print(words);
-
+            palindromes = palindromes.OrderBy(x => x).ToList();
+            Console.WriteLine(string.Join(", ", palindromes.Distinct()));
         }
 
-        private static void Print(List<string> words)
-        {
-            words = words.OrderBy(x => x).ToList();
 
-            for (int i = 0; i < words.Count; i++)
-            {
-                if (i == words.Count - 1)
-                {
-                    Console.Write(words[i]);
-                }
-                else
-                {
-                    Console.Write(words[i] + ", ");
-                }
-            }
+        private static bool IsWordPalindrome(string v)
+        {
+            string reversed = Reverse(v);
+            return v.Equals(reversed);
         }
-
-        private static bool IsPalindrome(string currWord)
+        public static string Reverse(string s)
         {
-            string frontToEnd = GetString(currWord, true);
-            string backToFront = GetString(currWord, false);
-
-            if (frontToEnd.Equals(backToFront))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private static string GetString(string currWord, bool v)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (v)
-            {
-                for (int i = 0; i < currWord.Length; i++)
-                {
-                    sb.Append(currWord[i]);
-                }
-            }
-            else
-            {
-                for (int i = currWord.Length - 1; i >= 0; i--)
-                {
-                    sb.Append(currWord[i]);
-                }
-            }
-            
-
-            return sb.ToString();
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
     }
 }

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Strings - Lab")]
+[assembly: AssemblyTitle("01. Reverse String")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Strings - Lab")]
+[assembly: AssemblyProduct("01. Reverse String")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("352f3ab6-3e4c-4f23-90ed-9adf4206edda")]
+[assembly: Guid("a3d41f8b-3dd5-4fb3-b5f9-6c369570e121")]
 
 // Version information for an assembly consists of the following four values:
 //
