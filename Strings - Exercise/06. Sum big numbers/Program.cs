@@ -29,30 +29,30 @@ namespace _06.Sum_big_numbers
         private static string SumNumbers(string num1, string num2)
         {
             string res = string.Empty;
-            int naum = 0;
+            int accumulation = 0;
 
             for (int i = num1.Length - 1; i >= 0; i--)
             {
                 int currNumberNum1 = int.Parse(num1[i].ToString());
                 int currNumberNum2 = int.Parse(num2[i].ToString());
 
-                int sum = currNumberNum1 + currNumberNum2 + naum;
-                naum = 0;
+                int sum = currNumberNum1 + currNumberNum2 + accumulation;
+                accumulation = 0;
 
                 if (sum >= 10)
-                {     
-                    naum++;
+                {
+                    accumulation++;
                     res = res.Insert(0, (sum - 10).ToString());
                 }
                 else
                 {
-                    naum = 0;
+                    accumulation = 0;
                     res = res.Insert(0, sum.ToString());
                 }
 
-                if (i == 0 && naum != 0)
+                if (i == 0 && accumulation != 0)
                 {
-                    res = res.Insert(0, naum.ToString());
+                    res = res.Insert(0, accumulation.ToString());
                 }
             }
 

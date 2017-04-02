@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace _09.Melrah_Shake
@@ -10,14 +11,67 @@ namespace _09.Melrah_Shake
     {
         static void Main(string[] args)
         {
-            string[] a = new string[] { "pederas" , "dva", "tri" };
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < a.Length; i++)
+            string text = Console.ReadLine();
+            string pattern = Console.ReadLine();
+
+            while (true)
             {
-                sb.Append(a[i]);
-                sb.Append(" ");
+                if (GetCountOccurences(text, pattern) >= 2)
+                {
+                    text = RemoveFirstAndLast(text, pattern);
+                    Console.WriteLine("Shaked it.");
+                    pattern = EditPattern(pattern);
+
+                    if (pattern.Length == 0)
+                    {
+                        Console.WriteLine("No shake.");
+                        break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No shake.");
+                    break;
+                }
+
             }
-            Console.WriteLine(sb.ToString());
+
+            Console.WriteLine(text);
+
+        }
+
+        private static string EditPattern(string pattern)
+        {
+            int index = pattern.Length / 2;
+            return pattern.Remove(index, 1);
+        }
+
+        private static string RemoveFirstAndLast(string text, string pattern)
+        {
+            text = RemoveFirst(text, pattern);
+            text = RemoveLast(text, pattern);
+            return text;
+        }
+
+        private static string RemoveLast(string text, string pattern)
+        {
+            var regex = new Regex(Regex.Escape(pattern), RegexOptions.RightToLeft);
+            string replace = regex.Replace(text, "", 1);
+            return replace;
+        }
+
+        private static string RemoveFirst(string text, string pattern)
+        {
+            var regex = new Regex(Regex.Escape(pattern));
+            string replace = regex.Replace(text, "", 1);
+            return replace;
+        }
+
+        private static int GetCountOccurences(string text, string pattern)
+        {
+            Regex reg = new Regex(Regex.Escape(pattern));
+            MatchCollection mc = reg.Matches(text);
+            return mc.Count;
         }
     }
 }

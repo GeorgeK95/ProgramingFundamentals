@@ -10,14 +10,16 @@ namespace _03.Unicode_Characters
     {
         static void Main(string[] args)
         {
-            string s = Console.ReadLine();
-            System.Text.UTF32Encoding encoding = new System.Text.UTF32Encoding();
-            byte[] bytes = encoding.GetBytes(s);
+            string input = Console.ReadLine();
 
-            for (int i2 = 0; i2 < bytes.Length; i2 += sizeof(int))
+            for (int i = 0; i < input.Length; i++)
             {
-                Console.Write("\\u00" + BitConverter.ToInt32(bytes, i2) + " ");
+                Console.Write(GetEscapeSequence(input[i]));
             }
+        }
+        static string GetEscapeSequence(char c)
+        {
+            return "\\u" + ((int)c).ToString("x4");
         }
     }
 }
