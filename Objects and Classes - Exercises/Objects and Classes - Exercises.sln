@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05. Book Library", "05. Boo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "06. Book Library Modification", "06. Book Library Modification\06. Book Library Modification.csproj", "{8E79B220-795E-4053-9BF9-33010033CA11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "demo", "demo\demo.csproj", "{B0A56226-BE37-44CC-8E28-263A58E160FC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "07. AndreyAndBilliard", "07. AndreyAndBilliard\07. AndreyAndBilliard.csproj", "{FB149DEE-4167-4935-906F-8BE5F4504464}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "08. MentorGroup", "08. MentorGroup\08. MentorGroup.csproj", "{268B0916-9D78-4221-B5C7-4ABCFD628720}"
@@ -24,8 +22,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "09. TeamworkProjects", "09. TeamworkProjects\09. TeamworkProjects.csproj", "{448BCDDB-407D-4E3C-8179-EBDEF22C1C0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "10. Student Groups", "10. Student Groups\10. Student Groups.csproj", "{0C7A7BE8-2BFE-46B7-AB51-7B6E83827825}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "helper", "helper\helper.csproj", "{5AEF3A97-E7BC-402B-B279-DB58DD689755}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,10 +53,6 @@ Global
 		{8E79B220-795E-4053-9BF9-33010033CA11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E79B220-795E-4053-9BF9-33010033CA11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E79B220-795E-4053-9BF9-33010033CA11}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0A56226-BE37-44CC-8E28-263A58E160FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0A56226-BE37-44CC-8E28-263A58E160FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0A56226-BE37-44CC-8E28-263A58E160FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0A56226-BE37-44CC-8E28-263A58E160FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB149DEE-4167-4935-906F-8BE5F4504464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB149DEE-4167-4935-906F-8BE5F4504464}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB149DEE-4167-4935-906F-8BE5F4504464}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,10 +69,6 @@ Global
 		{0C7A7BE8-2BFE-46B7-AB51-7B6E83827825}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C7A7BE8-2BFE-46B7-AB51-7B6E83827825}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C7A7BE8-2BFE-46B7-AB51-7B6E83827825}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5AEF3A97-E7BC-402B-B279-DB58DD689755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5AEF3A97-E7BC-402B-B279-DB58DD689755}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5AEF3A97-E7BC-402B-B279-DB58DD689755}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5AEF3A97-E7BC-402B-B279-DB58DD689755}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
