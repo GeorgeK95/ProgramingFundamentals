@@ -1,104 +1,89 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace _06.Book_Library_Modification
 {
+    class Library
+    {
+        public string name { get; set; }
+        public List<Book> books { get; set; }
+
+        public Library(string name)
+        {
+            this.name = name;
+            this.books = new List<Book>();
+        }
+
+    }
+    class Book
+    {
+        public string title { get; set; }
+        public string author { get; set; }
+        public string publisher { get; set; }
+        public DateTime releaseDate { get; set; }
+        public string ISBN { get; set; }
+        public double price { get; set; }
+
+        public Book(string title, string author, string publisher, DateTime releaseDate, string ISBN, double price)
+        {
+            this.title = title;
+            this.author = author;
+            this.publisher = publisher;
+            this.releaseDate = releaseDate;
+            this.ISBN = ISBN;
+            this.price = price;
+        }
+
+
+    }
     class Program
     {
         static void Main(string[] args)
         {
             int n = int.Parse(Console.ReadLine());
-            Library lib = new Library("LibraryVip");
-            DateTime limitDate;
+            Library library = new Library("Ivan Vazov");
 
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i <= n; i++)
             {
+                string[] bookInfo = Console.ReadLine().Split();
 
-                string line = Console.ReadLine();
-
-                string[] splitted = line.Split(' ');
-
-                string title = splitted[0];
-                string author = splitted[1];
-                double price = double.Parse(splitted[5]);
-                string fullDate = splitted[3];
-
-                DateTime datePublish = new DateTime(int.Parse(fullDate.Split('.')[2]), int.Parse(fullDate.Split('.')[1]), int.Parse(fullDate.Split('.')[0]));
-
-                Book book = new Book(title, author, price, datePublish);
-
-                lib.AddBook(book);
-            }
-
-            string limitDateStr = Console.ReadLine();
-            string[] limitDateArr = limitDateStr.Split('.');
-
-            limitDate = new DateTime(int.Parse(limitDateArr[2]), int.Parse(limitDateArr[1]), int.Parse(limitDateArr[0]));
-            Print(lib.getBooksList(), limitDate);
-        }
-
-        private static void Print(Dictionary<string, DateTime> dictionary, DateTime limitDate)
-        {
-            var a = dictionary.OrderBy(x => x.Value).ThenBy(x => x.Key).ToList();
-            string format = "dd.MM.yyyy";
-
-            foreach (var item in a)
-            {
-                if (item.Value.Date > limitDate.Date)
+                if (i == n)
                 {
-                    Console.WriteLine($"{item.Key} -> {item.Value.ToString(format)}");
+                    PrintLibrary(library, DateTime.ParseExact(bookInfo[0], "dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    break;
                 }
-                
+
+                string title = bookInfo[0];
+                string author = bookInfo[1];
+                string publisher = bookInfo[2];
+                DateTime date = DateTime.ParseExact(bookInfo[3], "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                string ISBN = bookInfo[4];
+                double price = double.Parse(bookInfo[5]);
+
+                Book book = new Book(title, author, publisher, date, ISBN, price);
+
+                AddCurrentBookToLibrary(book, library);
             }
         }
 
-    }
-
-    class Book
-    {
-        public string author;
-        public double price;
-        public string title;
-        public DateTime date;
-
-        public Book(string title, string author, double price, DateTime publishDate)
+        private static void AddCurrentBookToLibrary(Book book, Library library)
         {
-            this.title = title;
-            this.author = author;
-            this.price = price;
-            this.date = publishDate;
-        }
-    }
-
-    class Library
-    {
-        public Dictionary<string, DateTime> books = new Dictionary<string, DateTime>();
-        public string libName;
-
-        public Library(string libraryName)
-        {
-            this.libName = libraryName;
+            library.books.Add(book);
         }
 
-        public void AddBook(Book book)
+        private static void PrintLibrary(Library library, DateTime dateAfter)
         {
-            if (!this.books.ContainsKey(book.title))
+            foreach (var book in library.books.OrderBy(x => x.releaseDate).ThenBy(x => x.title))
             {
-                this.books.Add(book.title, book.date);
+                if (book.releaseDate > dateAfter)
+                {
+                    Console.WriteLine($"{book.title} -> {book.releaseDate.ToString("dd.MM.yyyy")}");
+                }
             }
-            else
-            {
-               // DateTime newDate = this.books[book.title];
-                this.books[book.title] = book.date;
-            }
-        }
-
-        public Dictionary<string, DateTime> getBooksList()
-        {
-            return this.books;
         }
     }
 }

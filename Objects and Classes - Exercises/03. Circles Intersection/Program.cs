@@ -78,7 +78,7 @@ namespace _03.Circles_Intersection
             Point pointCircle2 = new Point(x_2, y_2);
             Circle c2 = new Circle(pointCircle2, rad_2);
 
-            if (Circle.Intersect(c1,c2))
+            if (Circle.Intersect(c1, c2))
             {
                 Console.WriteLine("Yes");
             }
@@ -89,4 +89,3 @@ namespace _03.Circles_Intersection
         }
     }
 }
-

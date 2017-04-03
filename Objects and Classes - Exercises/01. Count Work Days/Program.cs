@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _01.Count_Work_Days
 {
@@ -11,11 +8,11 @@ namespace _01.Count_Work_Days
     {
         static void Main(string[] args)
         {
-            string d1 = Console.ReadLine();
-            string d2 = Console.ReadLine();
+            string firstInput = Console.ReadLine();
+            string secondInput = Console.ReadLine();
 
-            DateTime startDate = DateTime.ParseExact(d1, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-            DateTime endDate = DateTime.ParseExact(d2, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            DateTime startDate = DateTime.ParseExact(firstInput, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(secondInput, "dd-MM-yyyy", CultureInfo.InvariantCulture);
 
             List<DateTime> arr = new List<DateTime>()
             {
@@ -36,9 +33,9 @@ namespace _01.Count_Work_Days
 
             for (var date = startDate; date <= endDate; date = date.AddDays(1))
             {
-                DateTime temp = new DateTime(4, date.Month, date.Day);
+                DateTime tempDate = new DateTime(4, date.Month, date.Day);
 
-                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday && !arr.Contains(temp))
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday && !arr.Contains(tempDate))
                 {
                     workingDaysCounter++;
                 }

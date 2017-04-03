@@ -1,87 +1,96 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace _05.Book_Library
 {
+    class Library
+    {
+        public string name { get; set; }
+        public List<Book> books{ get; set; }
+
+        public Library(string name)
+        {
+            this.name = name;
+            this.books = new List<Book_Library.Book>();
+        }
+
+    }
+    class Book
+    {
+        public string title { get; set; }
+        public string author { get; set; }
+        public string publisher { get; set; }
+        public DateTime releaseDate { get; set; }
+        public string ISBN { get; set; }
+        public double price { get; set; }
+
+        public Book(string title, string author, string publisher, DateTime releaseDate, string ISBN, double price)
+        {
+            this.title = title;
+            this.author = author;
+            this.publisher = publisher;
+            this.releaseDate = releaseDate;
+            this.ISBN = ISBN;
+            this.price = price;
+        }
+
+        
+    }
     class Program
     {
         static void Main(string[] args)
         {
             int n = int.Parse(Console.ReadLine());
-            Library lib = new Library("LibraryVip");
+            Library library = new Library("Ivan Vazov");
 
             for (int i = 0; i < n; i++)
             {
-                string line = Console.ReadLine();
+                string[] bookInfo = Console.ReadLine().Split();
 
-                string[] splitted = line.Split(' ');
+                string title = bookInfo[0];
+                string author = bookInfo[1];
+                string publisher= bookInfo[2];
+                DateTime date = DateTime.ParseExact(bookInfo[3], "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                string ISBN = bookInfo[4];
+                double price = double.Parse(bookInfo[5]);
 
-                string author = splitted[1];
-                double price = double.Parse(splitted[5]);
+                Book book = new Book(title, author, publisher, date, ISBN, price);
 
-                Book book = new Book(author, price);
-
-                lib.AddBook(book);
+                AddCurrentBookToLibrary(book, library);
             }
 
-            Print(lib.getBooksList());
+            PrintLibrary(library);
         }
 
-        private static void Print(Dictionary<string, double> dictionary)
+        private static void AddCurrentBookToLibrary(Book book, Library library)
         {
-            var a = dictionary.OrderByDescending(x => x.Value).ThenBy(x => x.Key).ToList();
+            bool exists = false;
 
-            foreach (var item in a)
+            for (int i = 0; i < library.books.Count; i++)
             {
-                Console.WriteLine($"{item.Key} -> {item.Value:f2}");
+                if (library.books[i].author.Equals(book.author))
+                {
+                    library.books[i].price += book.price;
+                    exists = true;
+                }
             }
-        }
 
-
-    }
-
-    class Book
-    {
-        public string author;
-        public double price;
-
-        public Book(string author, double price)
-        {
-            this.author = author;
-            this.price = price;
-        }
-    }
-
-    class Library
-    {
-        public Dictionary<string, double> books = new Dictionary<string, double>();
-        public string libName;
-
-        public Library(string libraryName)
-        {
-            this.libName = libraryName;
-        }
-
-        public void AddBook(Book book)
-        {
-            if (!books.ContainsKey(book.author))
+            if (!exists)
             {
-                this.books.Add(book.author, book.price);
-            }
-            else
-            {
-                double oldPrice = this.books[book.author];
-                double newPrice = book.price + oldPrice;
-                books[book.author] = newPrice;
+                library.books.Add(book);
             }
         }
 
-        public Dictionary<string, double> getBooksList()
+        private static void PrintLibrary(Library library)
         {
-            return this.books;
+            foreach (var book in library.books.OrderByDescending(x=>x.price).ThenBy(x=>x.author))
+            {
+                Console.WriteLine($"{book.author} -> {book.price:F2}");
+            }
         }
     }
 }
