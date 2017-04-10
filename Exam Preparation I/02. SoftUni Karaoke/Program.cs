@@ -9,26 +9,26 @@ namespace _02.SoftUni_Karaoke
 {
     class Program
     {
-        static Dictionary<string, List<string>> awards = new Dictionary<string, List<string>>();
-
         static void Main(string[] args)
         {
-            List<string> names = GetNames().ToList();
-            List<string> songs = GetSongs().ToList();
+            List<string> singersList = GetSingersList();
+            List<string> songsList = GetSongsList();
+            Dictionary<string, List<string>> awards = new Dictionary<string, List<string>>();
+
             string input = Console.ReadLine();
 
             while (!input.Equals("dawn"))
             {
                 string singer = GetSinger(input);
 
-                if (names.Contains(singer))
+                if (singersList.Contains(singer))
                 {
                     string song = GetSong(input);
 
-                    if (songs.Contains(song))
+                    if (songsList.Contains(song))
                     {
                         string award = GetAward(input);
-                        AddAwardToDictionary(singer, award);
+                        AddInfoToDict(singer, award, awards);
                     }
 
                 }
@@ -36,10 +36,10 @@ namespace _02.SoftUni_Karaoke
                 input = Console.ReadLine();
             }
 
-            PrintDict();
+            Print(awards);
         }
 
-        private static void PrintDict()
+        private static void Print(Dictionary<string, List<string>> awards)
         {
             if (awards.Count == 0)
             {
@@ -57,28 +57,59 @@ namespace _02.SoftUni_Karaoke
                     }
                 }
             }
-           
         }
 
-        private static void AddAwardToDictionary(string singer, string award)
+        private static void AddInfoToDict(string singer, string award, Dictionary<string, List<string>> awards)
         {
+            var tempList = new List<string>();
+
             if (!awards.ContainsKey(singer))
             {
-                List<string> temp = new List<string>();
-                temp.Add(award);
-                awards.Add(singer, temp);
+                tempList.Add(award);
             }
             else
             {
-                List<string> temp = awards[singer];
-                if (!temp.Contains(award))
+                tempList = awards[singer];
+
+                if (!tempList.Contains(award))
                 {
-                    temp.Add(award);
+                    tempList.Add(award);
                 }
-                awards[singer] = temp;
+
             }
+
+            awards[singer] = tempList;
+
+        }
+        private static List<string> GetSongsList()
+        {
+            string songsInput = Console.ReadLine();
+            songsInput = Regex.Replace(songsInput, @"\s{2,}", " ");
+            string[] songs = songsInput.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            songs = RemoveUnwantedSpaces(songs);
+            return songs.ToList();
         }
 
+        private static List<string> GetSingersList()
+        {
+            string namesInput = Console.ReadLine();
+            namesInput = Regex.Replace(namesInput, @"\s{2,}", " ");
+            string[] names = namesInput.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            names = RemoveUnwantedSpaces(names);
+            return names.ToList();
+        }
+
+        private static string[] RemoveUnwantedSpaces(string[] str)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                str[i] = str[i].TrimStart();
+                str[i] = str[i].TrimEnd();
+            }
+
+            return str;
+
+        }
         private static string GetAward(string input)
         {
             string[] arrSplitted = input.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -117,43 +148,5 @@ namespace _02.SoftUni_Karaoke
 
             return arrSplitted[0];
         }
-
-        private static void PrintStrArr(List<string> str)
-        {
-            for (int i = 0; i < str.Count; i++)
-            {
-                Console.WriteLine(str[i]);
-            }
-        }
-
-        private static string[] GetSongs()
-        {
-            string songsInput = Console.ReadLine();
-            songsInput = Regex.Replace(songsInput, @"\s{2,}", " ");
-            string[] songs = songsInput.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            songs = RemoveUnwantedSpaces(songs);
-            return songs;
-        }
-
-        private static string[] GetNames()
-        {
-            string namesInput = Console.ReadLine();
-            namesInput = Regex.Replace(namesInput, @"\s{2,}", " ");
-            string[] names = namesInput.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            names = RemoveUnwantedSpaces(names);
-            return names;
-        }
-
-        private static string[] RemoveUnwantedSpaces(string[] str)
-        {
-            for (int i = 0; i < str.Length; i++)
-            {
-                str[i] = str[i].TrimStart();
-                str[i] = str[i].TrimEnd();
-            }
-
-            return str;
-            
-        }
     }
-}
+    }

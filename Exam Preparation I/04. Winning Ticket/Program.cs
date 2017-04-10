@@ -36,7 +36,7 @@ namespace _04.Winning_Ticket
                             {
                                 Console.WriteLine($"ticket \"{currentTicket}\" - {times1}$");
                             }
-                            
+
                             break;
                         case 2:
                             int times2 = symbolContained[1];
@@ -134,7 +134,7 @@ namespace _04.Winning_Ticket
 
         private static bool IsItInvalid(string currentTicket)
         {
-            if (currentTicket.Length != 20)     
+            if (currentTicket.Length != 20)
             {
                 return false;
             }
@@ -147,7 +147,7 @@ namespace _04.Winning_Ticket
 
             for (int i = 0; i < arr.Length; i++)
             {
-                arr[i] = arr[i].Trim(); 
+                arr[i] = arr[i].Trim();
             }
 
             return arr;

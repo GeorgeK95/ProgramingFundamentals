@@ -11,63 +11,88 @@ namespace _03.Endurance_Rally
         static void Main(string[] args)
         {
             string[] competitors = GetCompetitors();
-            double[] zones = GetZones();
+            double[] trackLayout = GetTrackLayout();
             int[] checkPoints = GetCheckPoints();
+            DoEnduranceRally(checkPoints, competitors, trackLayout);
+        }
 
-            for (int i = 0; i < competitors.Length; i++)
+        private static void DoEnduranceRally(int[] checkPoints, string[] competitors, double[] trackLayout)
+        {
+            for (int competitorIndex = 0; competitorIndex < competitors.Length; competitorIndex++)
             {
-                double fuel = (int)competitors[i][0];
-                bool success = true;
+                bool isFinished = true;
+                double currCompetitorFuel = GetStartingFuel(competitors[competitorIndex]);
 
-                for (int j = 0; j < zones.Length; j++)
+                for (int layoutIndex = 0; layoutIndex < trackLayout.Length; layoutIndex++)
                 {
-
-                    if (checkPoints.Contains(j))
+                    if (checkPoints.Contains(layoutIndex))
                     {
-                        fuel += zones[j];
+                        currCompetitorFuel += trackLayout[layoutIndex];
                     }
                     else
                     {
-                        fuel -= zones[j];
+                        currCompetitorFuel -= trackLayout[layoutIndex];
                     }
 
-                    if (fuel <= 0)
+                    if (currCompetitorFuel <= 0)
                     {
-                        Console.WriteLine($"{competitors[i]} - reached {j}");
-                        success = false;
+                        Console.WriteLine($"{competitors[competitorIndex]} - reached {layoutIndex}");
+                        isFinished = false;
                         break;
                     }
                 }
 
-                if (success)
+                if (isFinished)
                 {
-                    string formatted = string.Format("{0:F2}", fuel);
-                    Console.WriteLine($"{competitors[i]} - fuel left {formatted}");
+                    double fuelLeft = currCompetitorFuel;
+                    Console.WriteLine($"{competitors[competitorIndex]} - fuel left {fuelLeft:F2}");
                 }
+
             }
+        }
+
+        private static Dictionary<string, double> FillFuelInfo(string[] competitors)
+        {
+            var data = new Dictionary<string, double>();
+
+            foreach (var competitor in competitors)
+            {
+                int startFuel = GetStartingFuel(competitor);
+                data.Add(competitor, startFuel);
+            }
+
+            return data;
+        }
+
+        private static int GetStartingFuel(string competitor)
+        {
+            return competitor[0];
         }
 
         private static int[] GetCheckPoints()
         {
-            string input = Console.ReadLine();
-            int[] zones = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            string line = Console.ReadLine();
+            if (!line.Equals(string.Empty))
+            {
+                var competitors = line.Split().Select(int.Parse).ToArray();
+                return competitors;
+            }
 
-            return zones;
+            return new int[0];
+
         }
 
-        private static double[] GetZones()
+        private static double[] GetTrackLayout()
         {
-            double[] zones = Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToArray();
-
-            return zones;
+            var competitors = Console.ReadLine().Split().Select(double.Parse).ToArray();
+            return competitors;
         }
 
         private static string[] GetCompetitors()
         {
-            string input = Console.ReadLine();
-            string[] splitted = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            return splitted;
+            var competitors = Console.ReadLine().Split().ToArray();
+            return competitors;
         }
+
     }
 }
