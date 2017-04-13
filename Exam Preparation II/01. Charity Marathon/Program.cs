@@ -11,23 +11,19 @@ namespace _01.Charity_Marathon
         static void Main(string[] args)
         {
             int days = int.Parse(Console.ReadLine());
-            int part = int.Parse(Console.ReadLine());
+            long runners = long.Parse(Console.ReadLine());
             int laps = int.Parse(Console.ReadLine());
-            int length = int.Parse(Console.ReadLine());
-            int capacity = int.Parse(Console.ReadLine());
+            int trackLength = int.Parse(Console.ReadLine());
+            int trackCapacity = int.Parse(Console.ReadLine());
             double money = double.Parse(Console.ReadLine());
 
-            long runners = days * capacity;
-
-            if (part < runners)
+            if (runners > days * trackCapacity)
             {
-                runners = part;
+                runners = days * trackCapacity;
             }
 
-            long km = runners * laps * length;
-            km /= 1000;
-
-            Console.WriteLine("Money raised: {0:0.00}", km * money);
+            long km = (runners * laps * trackLength / 1000);
+            Console.WriteLine("Money raised: {0:F2}", km * money);
         }
     }
 }

@@ -2,166 +2,138 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace _02.Ladybugs
 {
     class Program
     {
-        static int[] field;
-
         static void Main(string[] args)
         {
-            int n = int.Parse(Console.ReadLine()); field = new int[n];
-            FillLadiesIndexexInTheField();
-            string command = Console.ReadLine();
+            int n = int.Parse(Console.ReadLine());
+            int[] field = GetField(n);
 
-            while (!command.Equals("end"))
+            while (true)
             {
-                string[] splittedCommand = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                int startIndex = int.Parse(splittedCommand[0]);
-                string direction = splittedCommand[1];
-                int count = int.Parse(splittedCommand[2]);
+                string command = Console.ReadLine();
 
-                if (count < 0)
+                if (command.Equals("end"))
                 {
-                    if (direction.Equals("right"))
-                    {
-                        direction = "left";
-                    }
-                    else if (direction.Equals("left"))
-                    {
-                        direction = "right";
-                    }
-
-                    count = Math.Abs(count);
+                    break;
                 }
 
-                Fly(startIndex, direction, count, false);
-                //  Fly(startIndex, direction, count);
+                int startIndex = GetStartIndex(command);
+                string dir = GetDir(command);
+                int length = GetLength(command);
 
-                command = Console.ReadLine();
+                if (startIndex >= 0 && startIndex < n)
+                {
+                    if (field[startIndex] == 1)
+                    {
+                        PerformFly(field, startIndex, dir, length);
+                    }
+                }
             }
 
             Console.WriteLine(string.Join(" ", field));
         }
 
-        private static void FillLadiesIndexexInTheField()
+        private static void PerformFly(int[] field, int startIndex, string dir, int length)
         {
-            string ladiesIndexes = Console.ReadLine();
-            ladiesIndexes = Regex.Replace(ladiesIndexes, @"\s+", " ");
-            int[] b = ladiesIndexes.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-
-            FillCells(b);
-        }
-
-        private static void Fly(int startIndex, string direction, int count, bool isFlying)
-        {
-            if (direction.Equals("right"))
+            if (length < 0)
             {
-                FlyRight(startIndex, count, false);
+                if (dir.Equals("left"))
+                {
+                    dir = "right";
+                }
+                else
+                {
+                    dir = "left";
+                }
+
+                length = Math.Abs(length);
+            }
+
+            field[startIndex] = 0;
+
+            if (dir.Equals("right"))
+            {
+                PerformFlyRecRight(field, startIndex, dir, length);
             }
             else
             {
-                FlyLeft(startIndex, count, false);
-            }
-            /*if (startIndex >= 0 && startIndex < field.Length && Math.Abs(count) < field.Length)
-            {
-                if (field[startIndex] == 1)
-                {
-                    if (!isFlying)
-                    {
-                        field[startIndex] = 0;
-                    }
-                    if (direction.Equals("right"))
-                    {
-                        if (startIndex + count < field.Length)
-                        {
-                            if (field[startIndex + count] == 1)
-                            {
-                                Fly(startIndex + count, direction, count, true);
-                            }
-                            else
-                            {
-                                field[startIndex + count] = 1;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (startIndex - Math.Abs(count) >= 0)
-                        {
-                            if (field[startIndex - count] == 1)
-                            {
-                                Fly(startIndex - count, direction, count, true);
-                            }
-                            else
-                            {
-                                field[startIndex - count] = 1;
-                            }
-                        }
-
-                    }
-                }
-
-            }*/
-        }
-
-        private static void FlyLeft(int startIndex, int count, bool isFlying)
-        {
-            if (startIndex >= 0 && startIndex < field.Length && field[startIndex] == 1)
-            {
-                if (!isFlying)
-                {
-                    field[startIndex] = 0;
-                }
-                if (startIndex - Math.Abs(count) >= 0)
-                {
-                    if (field[startIndex - count] == 1)
-                    {
-                        FlyLeft(startIndex - count, count, true);
-                    }
-                    else
-                    {
-                        field[startIndex - count] = 1;
-                    }
-                }
+                PerformFlyRecLeft(field, startIndex, dir, length);
             }
         }
 
-        private static void FlyRight(int startIndex, int count, bool isFlying)
+        private static void PerformFlyRecLeft(int[] field, int startIndex, string dir, int length)
         {
-            if (startIndex >= 0 && startIndex < field.Length && field[startIndex] == 1)
+            int newPos = startIndex - length;
+
+            if (newPos < 0)
             {
-                if (!isFlying)
-                {
-                    field[startIndex] = 0;
-                }
-                if (startIndex + count < field.Length)
-                {
-                    if (field[startIndex + count] == 1)
-                    {
-                        FlyRight(startIndex + count, count, true);
-                    }
-                    else
-                    {
-                        field[startIndex + count] = 1;
-                    }
-                }
+                return;
             }
+            if (field[newPos] == 0)
+            {
+                field[newPos] = 1;
+                return;
+            }
+
+
+            PerformFlyRecLeft(field, newPos, dir, length);
         }
 
-        private static void FillCells(int[] b)
+        private static void PerformFlyRecRight(int[] field, int startIndex, string dir, int length)
         {
-            for (int i = 0; i < b.Length; i++)
+            int newPos = startIndex + length;
+
+            if (newPos >= field.Length)
             {
-                int index = b[i];
-                if (index >= 0 && index < field.Length)
+                return;
+            }
+            if (field[newPos] == 0)
+            {
+                field[newPos] = 1;
+                return;
+            }
+
+
+            PerformFlyRecRight(field, newPos, dir, length);
+        }
+
+        private static int GetLength(string command)
+        {
+            string[] splitted = command.Split();
+            return int.Parse(splitted[2]);
+        }
+
+        private static string GetDir(string command)
+        {
+            string[] splitted = command.Split();
+            return splitted[1];
+        }
+
+        private static int GetStartIndex(string command)
+        {
+            string[] splitted = command.Split();
+            return int.Parse(splitted[0]);
+        }
+
+        private static int[] GetField(int n)
+        {
+            int[] field = new int[n];
+            int[] indexes = Console.ReadLine().Split().Select(int.Parse).ToArray();
+
+            foreach (var index in indexes)
+            {
+                if (index >= 0 && index < n)
                 {
                     field[index] = 1;
                 }
             }
+
+            return field;
         }
     }
 }

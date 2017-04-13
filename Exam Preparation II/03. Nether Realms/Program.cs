@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,37 +7,44 @@ using System.Threading.Tasks;
 
 namespace _03.Nether_Realms
 {
+    class Demon
+    {
+        public string name { get; set; }
+        public int health { get; set; }
+        public double damage { get; set; }
+
+        public Demon(string name, int health, double damage)
+        {
+            this.name = name;
+            this.health = health;
+            this.damage = damage;
+        }
+    }
     class Program
     {
-        static List<Animal> stats = new List<Animal>();
-
         static void Main(string[] args)
         {
-            System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            string line = Console.ReadLine();
-            string[] animals = GetAnimals(line);
+            string input = Console.ReadLine();
+            string[] demons = GetDemons(input);
+            List<Demon> demonsList = new List<Demon>();
 
-            for (int i = 0; i < animals.Length; i++)
+            for (int i = 0; i < demons.Length; i++)
             {
-                string name = animals[i];
-                int health = CalculateHealth(animals[i]);
-                double damage = CalculateDamage(animals[i]);
+                string currentDemon = demons[i];
+                int health = GetDemonHealth(currentDemon);
+                double damage = CalculateDamage(currentDemon);
 
-                Animal currAnimal = new Animal(name, health, damage);
-                stats.Add(currAnimal);
+                Demon demon = new Demon(demons[i], health, damage);
+                demonsList.Add(demon);
             }
 
-            Print();
+            PrintDemons(demonsList);
         }
 
-        private static void Print()
+        private static string[] GetDemons(string line)
         {
-            stats = stats.OrderBy(x => x.animalName).ToList();
-
-            foreach (var anim in stats)
-            {
-                Console.WriteLine($"{anim.animalName} - {anim.health} health, {anim.damage:0.00} damage");
-            }
+            string[] spl = line.Split(new char[] { ' ', ',', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return spl;
         }
 
         private static double CalculateDamage(string v)
@@ -53,20 +59,20 @@ namespace _03.Nether_Realms
                 res += curr;
             }
 
-            double multi = GetMultiplier(v);
+            double multi = GetMultyDivideOperations(v);
             res *= multi;
             return res;
         }
 
-        private static double GetMultiplier(string v)
+        private static double GetMultyDivideOperations(string currentDemon)
         {
             string pat = @"[\*\/]";
-            MatchCollection a = Regex.Matches(v, pat);
+            MatchCollection matches = Regex.Matches(currentDemon, pat);
             double res = 1;
 
-            for (int i = 0; i < a.Count; i++)
+            for (int i = 0; i < matches.Count; i++)
             {
-                if (a[i].ToString().Equals("*"))
+                if (matches[i].ToString().Equals("*"))
                 {
                     res *= 2;
                 }
@@ -79,12 +85,18 @@ namespace _03.Nether_Realms
             return res;
         }
 
+        private static string ReplaceWordsWithSpaces(string currentDemon)
+        {
+            Regex reg = new Regex(@"[a-zA-Z]");
+            currentDemon = reg.Replace(currentDemon, " ");
+            return currentDemon;
+        }
 
-        private static int CalculateHealth(string v)
+        private static int GetDemonHealth(string currentDemon)
         {
             string pattern = @"[^\d\+\-\.\*\/]";
             int res = 0;
-            MatchCollection mc = Regex.Matches(v, pattern);
+            MatchCollection mc = Regex.Matches(currentDemon, pattern);
 
             for (int i = 0; i < mc.Count; i++)
             {
@@ -94,24 +106,17 @@ namespace _03.Nether_Realms
             return res;
         }
 
-        private static string[] GetAnimals(string line)
+        private static string RemoveSpaces(string input)
         {
-            string[] spl = line.Split(new char[] { ' ', ',' , '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            return spl;
+            return input.Replace(" ", "");
         }
-    }
-    class Animal
-    {
-        public string animalName;
-        public double health;
-        public double damage;
 
-        public Animal(string animalName, double health, double damage)
+        private static void PrintDemons(List<Demon> demonsList)
         {
-            this.animalName = animalName;
-            this.health = health;
-            this.damage = damage;
+            foreach (var demon in demonsList.OrderBy(x => x.name))
+            {
+                Console.WriteLine($"{demon.name} - {demon.health} health, {demon.damage:F2} damage");
+            }
         }
     }
 }
