@@ -2,151 +2,183 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace _02.Command_Interpreter
 {
     class Program
     {
-        static List<string> a;
-
         static void Main(string[] args)
         {
-            /*1 2 3 4 5
-sort from -1 count 2
-sort from 0 count -1
-reverse from 5 count 1
-end*/
-            a = Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            string command = Console.ReadLine();
+            string[] arr = GetArray();
 
-            while (!command.Equals("end"))
+            while (true)
             {
-                command = Regex.Replace(command, @"\s+", " ");
+                string command = Console.ReadLine();
 
-                string[] spl = command.Split(new char[] { ' ' });
+                if (command.Equals("end"))
+                {
+                    PrintArray(arr);
+                    break;
+                }
 
-                if (spl[0].Equals("reverse"))
+                if (IsValid(command, arr.Length, arr))
                 {
-                    ExecuteReverse(spl);
-                }
-                else if (spl[0].Equals("sort"))
-                {
-                    ExecuteSort(spl);
-                }
-                else if (spl[0].Equals("rollRight"))
-                {
-                    ExecuteRollRightExecution(spl);
-                }
-                else if (spl[0].Equals("rollLeft"))
-                {
-                    ExecuteRollLeftExecution(spl);
+                    arr = PerformAction(arr, command);
                 }
                 else
                 {
                     Console.WriteLine("Invalid input parameters.");
                 }
-
-                command = Console.ReadLine();
-            }
-
-            Print();
-        }
-
-        private static void ExecuteRollLeftExecution(string[] command)
-        {
-            int count = int.Parse(command[1]);
-
-            if (count < 0)
-            {
-                Console.WriteLine("Invalid input parameters.");
-            }
-
-            count %= a.Count;
-            for (int i = count; i > 0; i--)
-            {
-                string first = a.First();
-                a.Remove(a.First());
-                a.Add(first);
             }
         }
 
-        private static void ExecuteRollRightExecution(string[] command)
+        private static void PrintArray(string[] arr)
         {
-            int count = int.Parse(command[1]);
-            count %= a.Count;
-            if (count < 0)
+            Console.Write('[');
+            Console.Write(string.Join(", ", arr));
+            Console.WriteLine(']');
+        }
+
+        private static string[] PerformAction(string[] arr, string command)
+        {
+            if (command.Split()[0].Equals("reverse"))
             {
-                Console.WriteLine("Invalid input parameters.");
+                PerformReverse(arr, command);
+            }
+            else if (command.Split()[0].Equals("sort"))
+            {
+                PerformSort(arr, command);
+            }
+            else if (command.Split()[0].Equals("rollLeft"))
+            {
+                arr = PerformRollLeft(arr, command);
+            }
+            else if (command.Split()[0].Equals("rollRight"))
+            {
+                arr = PerformRollRight(arr, command);
             }
             else
             {
-                for (int j = 0; j < count; j++)
-                {
-                    string temp = a[a.Count - 1];
-                    for (int i = a.Count - 1; i > 0; i--)
-                    {
-                        a[i] = a[i - 1];
-                    }
+                Console.WriteLine("No Match");
+            }
 
-                    a[0] = temp;
+            return arr;
+        }
+
+        private static string[] PerformRollRight(string[] arr, string command)
+        {
+            int count = GetRollCount(command) % arr.Length;
+            List<string> arrList = arr.ToList();
+
+            for (int i = 0; i < count; i++)
+            {
+                string a = arrList.Last();
+                int indexToRemove = arrList.LastIndexOf(a);
+                arrList.RemoveAt(indexToRemove);
+                arrList.Insert(0, a);
+            }
+
+            return arrList.ToArray();
+        }
+
+        private static string[] PerformRollLeft(string[] arr, string command)
+        {
+            int count = GetRollCount(command) % arr.Length;
+            List<string> arrList = arr.ToList();
+
+            for (int i = 0; i < count; i++)
+            {
+                string a = arrList.First();
+                arrList.Remove(arrList.First());
+                arrList.Add(a);
+            }
+
+            return arrList.ToArray();
+        }
+
+        private static int GetRollCount(string command)
+        {
+            string[] splittedCommand = command.Split();
+            return int.Parse(splittedCommand[1]);
+        }
+
+        private static void PerformSort(string[] arr, string command)
+        {
+            int start = GetStartIndex(command);
+            int count = GetCount(command);
+
+            string[] toSort = arr.Skip(start).Take(count).ToArray();
+            Array.Sort(toSort);
+            int j = 0;
+
+            for (int i = start; i < count + start; i++)
+            {
+                arr[i] = toSort[j];
+                j++;
+            }
+        }
+
+        private static void PerformReverse(string[] arr, string command)
+        {
+            int start = GetStartIndex(command);
+            int count = GetCount(command);
+
+            string[] toReverse = arr.Skip(start).Take(count).ToArray();
+            toReverse = toReverse.Reverse().ToArray();
+            int j = 0;
+
+            for (int i = start; i < count + start; i++)
+            {
+                arr[i] = toReverse[j];
+                j++;
+            }
+        }
+        private static int GetCount(string command)
+        {
+            string[] splittedCommand = command.Split();
+            return int.Parse(splittedCommand[4]);
+        }
+
+        private static int GetStartIndex(string command)
+        {
+            string[] splittedCommand = command.Split();
+            return int.Parse(splittedCommand[2]);
+        }
+
+        private static bool IsValid(string command, int n, string[] a)
+        {
+            if (command.Split()[0].Equals("reverse") || command.Split()[0].Equals("sort"))
+            {
+                int start = GetStartIndex(command);
+                int count = GetCount(command);
+
+                if (start < 0 || start >= n)
+                {
+                    return false;
+                }
+                if (start + count > n || count < 0)
+                {
+                    return false;
+                }
+
+            }
+            else
+            {
+                int count = GetRollCount(command);
+
+                if (count < 0)
+                {
+                    return false;
                 }
             }
+
+            return true;
         }
 
-        private static void ExecuteSort(string[] command)
+        private static string[] GetArray()
         {
-            int start = int.Parse(command[2]);
-            int count = int.Parse(command[4]);
-
-            if (start >= 0 && start < a.Count && count >= 0 && count + start <= a.Count && count <= a.Count)
-            {
-                Sort(start, count);
-            }
-            else
-            {
-                Console.WriteLine("Invalid input parameters.");
-            }
+            return Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
-
-        private static void ExecuteReverse(string[] command)
-        {
-            int start = int.Parse(command[2]);
-            int count = int.Parse(command[4]);
-
-            if (start >= 0 && start < a.Count && count >= 0 && count + start <= a.Count && count <= a.Count)
-            {
-                Reverse(start, count);
-            }
-            else
-            {
-                Console.WriteLine("Invalid input parameters.");
-            }
-        }
-
-        private static void Print()
-        {
-            Console.Write("[");
-            Console.Write(string.Join(", ", a));
-            Console.Write("]");
-        }
-
-        private static void Sort(int start, int count)
-        {
-            List<string> toBeSorted = a.GetRange(start, count);
-            a.RemoveRange(start, count);
-            toBeSorted.Sort();
-            a.InsertRange(start, toBeSorted);
-        }
-
-        private static void Reverse(int start, int count)
-        {
-            List<string> toBeReversed = a.GetRange(start, count);
-            a.RemoveRange(start, count);
-            toBeReversed.Reverse();
-            a.InsertRange(start, toBeReversed);
-        }
-
     }
 }

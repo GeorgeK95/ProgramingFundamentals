@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace _01.Softuni_Coffee_Orders
 {
@@ -11,24 +12,22 @@ namespace _01.Softuni_Coffee_Orders
         static void Main(string[] args)
         {
             int n = int.Parse(Console.ReadLine());
-            List<decimal> check = new List<decimal>();
+            decimal total = 0;
 
             for (int i = 0; i < n; i++)
             {
-                decimal ppc = decimal.Parse(Console.ReadLine());
-                string[] da = Console.ReadLine().Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                decimal daysInMonth = DateTime.DaysInMonth(int.Parse(da[2]), int.Parse(da[1]));
-                int count = int.Parse(Console.ReadLine());
+                decimal price = decimal.Parse(Console.ReadLine());
+                DateTime orderDate = DateTime.ParseExact(Console.ReadLine(), "d/M/yyyy", CultureInfo.InvariantCulture);
+                long count = long.Parse(Console.ReadLine());
 
-                decimal currCheck = daysInMonth * count * ppc;
-                check.Add(currCheck);
+                int days = DateTime.DaysInMonth(orderDate.Year, orderDate.Month);
+                decimal result = days * count * price;
+
+                Console.WriteLine($"The price for the coffee is: ${result:F2}");
+                total += result;
             }
 
-            foreach (var item in check)
-            {
-                Console.WriteLine($"The price for the coffee is: ${item:f2}");
-            }
-            Console.WriteLine($"Total: ${check.Sum():f2}");
+            Console.WriteLine($"Total: ${total:F2}");
         }
     }
 }
