@@ -9,188 +9,157 @@ namespace _03.Football_League
 {
     class Program
     {
-        static List<Team> table = new List<Team>();
-
         static void Main(string[] args)
         {
+            Dictionary<string, int> teamPoints = new Dictionary<string, int>();
+            Dictionary<string, int> teamGoals = new Dictionary<string, int>();
             string key = Console.ReadLine();
-            string line = Console.ReadLine();
 
-            while (!line.Equals("final"))
+            while (true)
             {
-                string team1 = GetFirstTeam(line, key, true);
-                string team2 = GetFirstTeam(line, key, false);
-                int[] score = GetTheResult(line);
+                string line = Console.ReadLine();
 
-                if (score[0] != score[1])
+                if (line.Equals("final"))
                 {
-                    if (score[0] > score[1])
-                    {
-                        Team winTeam = new Team(team1, score[0], 3);
-                        Team LoseTeam = new Team(team2, score[1], 0);
-
-                        WriteInTable(winTeam);
-                        WriteInTable(LoseTeam);
-                    }
-                    else
-                    {
-                        Team winTeam = new Team(team2, score[1], 3);
-                        Team LoseTeam = new Team(team1, score[0], 0);
-
-                        WriteInTable(winTeam);
-                        WriteInTable(LoseTeam);
-                    }
-                }
-                else
-                {
-                    Team currTeam1 = new Team(team1, score[0], 1);
-                    Team currTeam2 = new Team(team2, score[1], 1);
-
-                    EqualResult(currTeam1, currTeam2);
+                    Print(teamPoints, teamGoals);
+                    break;
                 }
 
-                line = Console.ReadLine();
+                PlayMatch(teamGoals, teamPoints, line, key);
             }
-
-            Print();
-
         }
 
-        private static void Print()
+        private static void Print(Dictionary<string, int> teamPoints, Dictionary<string, int> teamGoals)
         {
-            table = table.OrderByDescending(x => x.points).ThenBy(y => y.name).ToList();
-            int place = 1;
-
             Console.WriteLine("League standings:");
-            foreach (var team in table)
+            int position = 1;
+
+            foreach (var team in teamPoints.OrderByDescending(x => x.Value).ThenBy(x => x.Key))
             {
-                Console.WriteLine($"{place}. {team.name} {team.points}");
-                place++;
+                Console.WriteLine($"{position}. {team.Key} {team.Value}");
+                position++;
             }
 
             Console.WriteLine("Top 3 scored goals:");
-            table = table.OrderByDescending(x => x.goals).ThenBy(y => y.name).ToList();
 
-            int brakeCount = 0;
-            foreach (var team in table)
+            foreach (var team in teamGoals.OrderByDescending(x => x.Value).ThenBy(x => x.Key).Take(3))
             {
-                Console.WriteLine($"- {team.name} -> {team.goals}");
-                brakeCount++;
-                if (brakeCount == 3)
+                Console.WriteLine($"- {team.Key} -> {team.Value}");
+            }
+        }
+
+        private static void PlayMatch(Dictionary<string, int> teamGoals, Dictionary<string, int> teamPoints, string line, string key)
+        {
+            string firstTeam = GetFirstTeam(line, key).ToUpper();
+            string secondTeam = GetSecondTeam(line, key).ToUpper();
+
+            int firstTeamGoals = GetFirstTeamGoals(line);
+            int secondTeamGoals = GetSecondTeamGoals(line);
+
+            int firstTeamPoints = GetFirstTeamPoints(firstTeamGoals, secondTeamGoals);
+            int secondTeamPoints = GetSecondTeamPoints(firstTeamGoals, secondTeamGoals);
+
+            UpdateFirstTeamPoints(teamPoints, firstTeam, firstTeamPoints);
+            UpdateSecondTeamPoints(teamPoints, secondTeam, secondTeamPoints);
+
+            UpdateFirstTeamGoals(teamGoals, firstTeam, firstTeamGoals);
+            UpdateSecondTeamGoals(teamGoals, secondTeam, secondTeamGoals);
+        }
+
+        private static int GetSecondTeamPoints(int firstTeamGoals, int secondTeamGoals)
+        {
+            if (secondTeamGoals > firstTeamGoals)
+            {
+                return 3;
+            }
+            else if (secondTeamGoals < firstTeamGoals)
+            {
+                return 0;
+            }
+
+            return 1;
+        }
+
+        private static int GetFirstTeamPoints(int firstTeamGoals, int secondTeamGoals)
+        {
+            if (firstTeamGoals > secondTeamGoals)
+            {
+                return 3;
+            }
+            else if (firstTeamGoals < secondTeamGoals)
+            {
+                return 0;
+            }
+
+            return 1;
+        }
+
+        private static int GetSecondTeamGoals(string line)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = line.Length - 1; i >= 0; i--)
+            {
+                if (line[i] == ':')
                 {
                     break;
                 }
+
+                sb.Append(line[i]);
             }
+
+            string numStr = Reverse(sb.ToString());
+            return int.Parse(numStr);
         }
 
-        private static void EqualResult(Team currTeam1, Team currTeam2)
+        private static int GetFirstTeamGoals(string line)
         {
-            FilPointsInTeam(currTeam1);
-            FilPointsInTeam(currTeam2);
-        }
+            StringBuilder sb = new StringBuilder();
+            bool toWrite = false;
 
-        private static void FilPointsInTeam(Team currTeam1)
-        {
-            bool a = false;
-            int index = 0;
-
-            for (int i = 0; i < table.Count; i++)
+            for (int i = line.Length - 1; i >= 0; i--)
             {
-                if (table[i].name.Equals(currTeam1.name))
+                if (toWrite)
                 {
-                    a = true;
-                    index = i;
-                    break;
+                    if (line[i] < 48 || line[i] > 57)
+                    {
+                        break;
+                    }
+
+                    sb.Append(line[i]);
                 }
-            }
-
-            if (!a)
-            {
-                table.Add(currTeam1);
-            }
-            else
-            {
-                Team old = table[index];
-                old.goals += currTeam1.goals;
-                old.points += currTeam1.points;
-                table[index] = old;
-            }
-        }
-
-        private static void WriteInTable(Team currTeam)
-        {
-            bool a = false;
-            int index = 0;
-
-            for (int i = 0; i < table.Count; i++)
-            {
-                if (table[i].name.Equals(currTeam.name))
+                if (line[i] == ':')
                 {
-                    a = true;
-                    index = i;
-                    break;
+                    toWrite = true;
                 }
+
             }
 
-            if (!a)
-            {
-                table.Add(currTeam);
-            }
-            else
-            {
-                Team old = table[index];
-                old.goals += currTeam.goals;
-                old.points += currTeam.points;
-                table[index] = old;
-            }
+            string numStr = Reverse(sb.ToString());
+            return int.Parse(numStr);
         }
 
-        private static int[] GetTheResult(string line)
+        private static string GetSecondTeam(string line, string key)
         {
-            string pattern = @"\d*:\d*";
-            Match mc = Regex.Match(line, pattern, RegexOptions.RightToLeft);
-            int[] arr = new int[2];
+            int start1 = line.IndexOf(key);
+            int end1 = line.IndexOf(key, start1 + 1);
 
-            string q = mc.ToString();
-            string[] qq = q.Split(':');
+            int start = line.IndexOf(key, end1 + 1);
+            int end = line.IndexOf(key, start + 1);
 
-            arr[0] = int.Parse(qq[0]);
-            arr[1] = int.Parse(qq[1]);
-
-            return arr;
+            string team = line.Substring(start + key.Length, end - start - key.Length);
+            team = Reverse(team);
+            return team;
         }
 
-        private static string GetFirstTeam(string line, string key, bool isFirstTeam)
+        private static string GetFirstTeam(string line, string key)
         {
-            int st_t1 = line.IndexOf(key);
-            int en_t1 = line.IndexOf(key, st_t1 + 1);
+            int start = line.IndexOf(key);
+            int end = line.IndexOf(key, start + 1);
 
-            int st_t2 = line.IndexOf(key, en_t1 + 1);
-            int en_t2 = line.IndexOf(key, st_t2 + 1);
-
-            /* Console.WriteLine(st_t1);
-             Console.WriteLine(en_t1);
-             Console.WriteLine(st_t2);
-             Console.WriteLine(en_t2);*/
-
-            string t1 = line.Substring(st_t1 + key.Length, en_t1 - st_t1 - key.Length);
-            t1 = Reverse(t1);
-
-            string t2 = line.Substring(st_t2 + key.Length, en_t2 - st_t2 - key.Length);
-            t2 = Reverse(t2);
-
-            t1 = t1.ToUpper();
-            t2 = t2.ToUpper();
-
-            /* Console.WriteLine(t1);
-             Console.WriteLine(t2);*/
-
-            if (isFirstTeam)
-            {
-                return t1;
-            }
-
-            return t2;
+            string team = line.Substring(start + key.Length, end - start - key.Length);
+            team = Reverse(team);
+            return team;
         }
         public static string Reverse(string s)
         {
@@ -198,20 +167,60 @@ namespace _03.Football_League
             Array.Reverse(charArray);
             return new string(charArray);
         }
+        private static void UpdateSecondTeamGoals(Dictionary<string, int> teamGoals, string secondTeam, int secondTeamGoals)
+        {
+            if (teamGoals.ContainsKey(secondTeam))
+            {
+                int currentGoals = teamGoals[secondTeam];
+                currentGoals += secondTeamGoals;
+                teamGoals[secondTeam] = currentGoals;
+            }
+            else
+            {
+                teamGoals.Add(secondTeam, secondTeamGoals);
+            }
+        }
+
+        private static void UpdateFirstTeamGoals(Dictionary<string, int> teamGoals, string firstTeam, int firstTeamGoals)
+        {
+            if (teamGoals.ContainsKey(firstTeam))
+            {
+                int currentGoals = teamGoals[firstTeam];
+                currentGoals += firstTeamGoals;
+                teamGoals[firstTeam] = currentGoals;
+            }
+            else
+            {
+                teamGoals.Add(firstTeam, firstTeamGoals);
+            }
+        }
+
+        private static void UpdateSecondTeamPoints(Dictionary<string, int> teamPoints, string secondTeam, int secondTeamPoints)
+        {
+            if (teamPoints.ContainsKey(secondTeam))
+            {
+                int currentPoints = teamPoints[secondTeam];
+                currentPoints += secondTeamPoints;
+                teamPoints[secondTeam] = currentPoints;
+            }
+            else
+            {
+                teamPoints.Add(secondTeam, secondTeamPoints);
+            }
+        }
+
+        private static void UpdateFirstTeamPoints(Dictionary<string, int> teamPoints, string firstTeam, int firstTeamPoints)
+        {
+            if (teamPoints.ContainsKey(firstTeam))
+            {
+                int currentPoints = teamPoints[firstTeam];
+                currentPoints += firstTeamPoints;
+                teamPoints[firstTeam] = currentPoints;
+            }
+            else
+            {
+                teamPoints.Add(firstTeam, firstTeamPoints);
+            }
+        }
     }
-
 }
-class Team
-{
-    public string name;
-    public int goals;
-    public int points;
-
-    public Team(string name, int goals, int points)
-    {
-        this.name = name;
-        this.goals = goals;
-        this.points = points;
-    }
-}
-

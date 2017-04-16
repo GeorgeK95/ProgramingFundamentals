@@ -8,310 +8,293 @@ namespace _02.Array_Manipulator
 {
     class Program
     {
-        static int[] arr;
-
         static void Main(string[] args)
         {
-            arr = Console.ReadLine().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-            string line = Console.ReadLine();
-            
-            while (!line.Equals("end"))
+            List<int> arr = GetArray();
+
+            while (true)
             {
-                string[] spl = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string command = Console.ReadLine();
 
-                if (spl.Length == 2)
+                if (command.Equals("end"))
                 {
-                    string p_1 = spl[0];
-
-                    if (p_1.Equals("exchange"))
-                    {
-                        ExecuteExchangeCommand(spl);
-                    }
-                    else if (p_1.Equals("max"))
-                    {
-                        ExecuteMaxCommand(spl);
-                    }
-                    else if (p_1.Equals("min"))
-                    {
-                        ExecuteMinCommand(spl);
-                    }
-
-                }
-                else if (spl.Length == 3)
-                {
-                    string[] spl1 = line.Split(' ');
-
-                    if (spl1[0].Equals("first"))
-                    {
-                        ExecuteFirstCommand(spl1);
-                    }
-                    else if (spl1[0].Equals("last"))
-                    {
-                        ExecuteLastCommand(spl1);
-                    }
-                   
+                    Print(arr);
+                    break;
                 }
 
-                line = Console.ReadLine();
+                ExecuteCommand(arr, command);
             }
-
-            PrintResult();
         }
 
-        private static void PrintResult()
+        private static void Print(List<int> arr)
         {
-            Console.Write("[");
+            Console.Write('[');
             Console.Write(string.Join(", ", arr));
-            Console.Write("]");
+            Console.Write(']');
         }
 
-        private static void ExecuteLastCommand(string[] spl1)
+        private static void ExecuteCommand(List<int> arr, string command)
         {
-            if (int.Parse(spl1[1]) > arr.Length)
-            {
-                Console.WriteLine("Invalid count");
-            }
-            else
-            {
-                int count = int.Parse(spl1[1]);
-                List<int> container = new List<int>();
+            string firstWord = command.Split()[0];
 
-                if (count == 0)
+            if (firstWord.Equals("exchange"))
+            {
+                ExecuteExchange(arr, command);
+            }
+            else if (firstWord.Equals("max"))
+            {
+                string secondWord = command.Split()[1];
+
+                if (secondWord.Equals("odd"))
                 {
-                    Print(container,false);
+                    ExecuteMaxOdd(arr);
                 }
                 else
                 {
+                    ExecuteMaxEven(arr);
 
-                    if (spl1[2].Equals("odd"))
-                    {
-                        for (int i = arr.Length - 1; i >= 0; i--)
-                        {
-                            if (arr[i] % 2 != 0)
-                            {
-                                container.Add(arr[i]);
-                            }
-                            if (container.Count == count)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    else if (spl1[2].Equals("even"))
-                    {
-                        for (int i = arr.Length - 1; i >= 0; i--)
-                        {
-                            if (arr[i] % 2 == 0)
-                            {
-                                container.Add(arr[i]);
-                            }
-                            if (container.Count == count)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                
-
-                    Print(container,true);
                 }
-
-
             }
+            else if (firstWord.Equals("min"))
+            {
+                string secondWord = command.Split()[1];
 
+                if (secondWord.Equals("odd"))
+                {
+                    ExecuteMinOdd(arr);
+                }
+                else
+                {
+                    ExecuteMinEven(arr);
+
+                }
+            }
+            else if (firstWord.Equals("first"))
+            {
+                int count = int.Parse(command.Split()[1]);
+                string secondWord = command.Split()[2];
+
+                if (secondWord.Equals("odd"))
+                {
+                    ExecuteFirstOdd(arr, count);
+                }
+                else
+                {
+                    ExecuteFirstEven(arr, count);
+                }
+            }
+            else if (firstWord.Equals("last"))
+            {
+                int count = int.Parse(command.Split()[1]);
+                string secondWord = command.Split()[2];
+
+                if (secondWord.Equals("odd"))
+                {
+                    ExecuteLastOdd(arr, count);
+                }          
+                else       
+                {          
+                    ExecuteLastEven(arr, count);
+                }
+            }
         }
 
-        private static void ExecuteFirstCommand(string[] spl1)
+        private static void ExecuteLastEven(List<int> arr, int count)
         {
-            if (int.Parse(spl1[1]) > arr.Length)
+            if (count > arr.Count)
             {
                 Console.WriteLine("Invalid count");
             }
             else
             {
-                int count = int.Parse(spl1[1]);
-                //int index = int.Parse(spl1[2]);
-                List<int> container = new List<int>();
+                List<int> first = arr;
+                first.Reverse();
+                first = first.Where(x => x % 2 == 0).Take(count).ToList();
 
-                if (spl1[2].Equals("odd"))
-                {
-                    for (int i = 0; i < arr.Length; i++)
-                    {
-                        if (arr[i] % 2 != 0)
-                        {
-                            container.Add(arr[i]);
-                        }
-                        if (container.Count == count)
-                        {
-                            break;
-                        }
-                    }
-                }
-                else if (spl1[2].Equals("even"))
-                {
-                    for (int i = 0; i < arr.Length; i++)
-                    {
-                        if (arr[i] % 2 == 0)
-                        {
-                            container.Add(arr[i]);
-                        }
-                        if (container.Count == count)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                Print(container, false);
+                first.Reverse();
+                arr.Reverse();
+                Console.Write('[');
+                Console.Write(string.Join(", ", first));
+                Console.WriteLine(']');
             }
         }
 
-        private static void Print(List<int> container, bool needToReverse)
+        private static void ExecuteLastOdd(List<int> arr, int count)
         {
-            if (needToReverse)
+            if (count > arr.Count)
             {
-                container.Reverse();
+                Console.WriteLine("Invalid count");
             }
+            else
+            {
+                List<int> first = arr;
+                first.Reverse();
+                first = first.Where(x => x % 2 == 1).Take(count).ToList();
 
-            Console.Write("[");
-            Console.Write(string.Join(", ", container));
-            Console.WriteLine("]");
+                first.Reverse();
+                arr.Reverse();
+                Console.Write('[');
+                Console.Write(string.Join(", ", first));
+                Console.WriteLine(']');
+            }
         }
 
-        private static void ExecuteMinCommand(string[] spl)
+        private static void ExecuteFirstEven(List<int> arr, int count)
         {
-            int bestIndex = int.MaxValue;
-            int maxValue = int.MaxValue;
-
-            if (spl[1].Equals("odd"))
+            if (count > arr.Count)
             {
-                for (int i = 0; i < arr.Length; i++)
+                Console.WriteLine("Invalid count");
+            }
+            else
+            {
+                List<int> first = arr.Where(x => x % 2 == 0).Take(count).ToList();
+
+                Console.Write('[');
+                Console.Write(string.Join(", ", first));
+                Console.WriteLine(']');
+            }
+        }
+
+        private static void ExecuteFirstOdd(List<int> arr, int count)
+        {
+            if (count > arr.Count)
+            {
+                Console.WriteLine("Invalid count");
+            }
+            else
+            {
+                List<int> first = arr.Where(x => x % 2 == 1).Take(count).ToList();
+
+                Console.Write('[');
+                Console.Write(string.Join(", ", first));
+                Console.WriteLine(']');
+            }
+        }
+
+        private static void ExecuteMinEven(List<int> arr)
+        {
+            int index = 0;
+            int min = int.MaxValue;
+            bool found = false;
+
+            for (int i = 0; i < arr.Count; i++)
+            {
+                if (arr[i] <= min && arr[i] % 2 == 0)
                 {
-                    if (arr[i] % 2 == 1)//ne4etno
-                    {
-                        if (arr[i] <= maxValue)
-                        {
-                            maxValue = arr[i];
-                            bestIndex = i;
-                        }
-                    }
+                    min = arr[i];
+                    index = i;
+                    found = true;
                 }
             }
-            else if (spl[1].Equals("even"))
-            {
-                for (int i = 0; i < arr.Length; i++)
-                {
-                    if (arr[i] % 2 == 0)//4etno
-                    {
-                        if (arr[i] <= maxValue)
-                        {
-                            maxValue = arr[i];
-                            bestIndex = i;
-                        }
-                    }
-                }
 
-            }
-
-            if (bestIndex == int.MaxValue)
+            if (!found)
             {
                 Console.WriteLine("No matches");
             }
             else
             {
-                Console.WriteLine(bestIndex);
+                Console.WriteLine(index);
             }
         }
 
-        private static void ExecuteMaxCommand(string[] spl)
+        private static void ExecuteMinOdd(List<int> arr)
         {
-            int bestIndex = int.MinValue;
-            int maxValue = int.MinValue;
+            int index = 0;
+            int min = int.MaxValue;
+            bool found = false;
 
-            if (spl[1].Equals("odd"))
+            for (int i = 0; i < arr.Count; i++)
             {
-                for (int i = 0; i < arr.Length; i++)
+                if (arr[i] <= min && arr[i] % 2 == 1)
                 {
-                    if (arr[i] % 2 == 1)//ne4etno
-                    {
-                        if (arr[i] >= maxValue)
-                        {
-                            maxValue = arr[i];
-                            bestIndex = i;
-                        }
-                    }
+                    min = arr[i];
+                    index = i;
+                    found = true;
                 }
             }
-            else if (spl[1].Equals("even"))
-            {
-                for (int i = 0; i < arr.Length; i++)
-                {
-                    if (arr[i] % 2 == 0)//4etno
-                    {
-                        if (arr[i] >= maxValue)
-                        {
-                            maxValue = arr[i];
-                            bestIndex = i;
-                        }
-                    }
-                }
 
-            }
-
-            if (bestIndex == int.MinValue)
+            if (!found)
             {
                 Console.WriteLine("No matches");
             }
             else
             {
-                Console.WriteLine(bestIndex);
+                Console.WriteLine(index);
             }
-
         }
 
-        private static void ExecuteExchangeCommand(string[] spl)
+        private static void ExecuteMaxEven(List<int> arr)
         {
-            int index = int.Parse(spl[1]);
+            int index = 0;
+            int max = int.MinValue;
+            bool found = false;
 
-            if (index >= 0 && index < arr.Length)
+            for (int i = 0; i < arr.Count; i++)
             {
-                int[] p1 = new int[index + 1];
-
-                for (int i = 0; i < index + 1; i++)
+                if (arr[i] >= max && arr[i] % 2 == 0)
                 {
-                    p1[i] = arr[i];
+                    max = arr[i];
+                    index = i;
+                    found = true;
                 }
+            }
 
-                int[] p2 = new int[arr.Length - index - 1];
-                int tempIndex = 0;
-
-                for (int i = index + 1; i < arr.Length; i++)
-                {
-                    p2[tempIndex] = arr[i];
-                    tempIndex++;
-                }
-
-                int[] copyP = new int[arr.Length];
-                int ppp = 0;
-                for (int i = 0; i < p2.Length; i++)
-                {
-                    copyP[i] = p2[i];
-                    ppp = i;
-                    ppp++;
-                }
-                
-                for (int i = 0; i < p1.Length; i++)
-                {
-                    copyP[ppp] = p1[i];
-                    ppp++;
-                }
-
-                arr = copyP;
+            if (!found)
+            {
+                Console.WriteLine("No matches");
             }
             else
+            {
+                Console.WriteLine(index);
+            }
+        }
+
+        private static void ExecuteMaxOdd(List<int> arr)
+        {
+            int index = 0;
+            int max = int.MinValue;
+            bool found = false;
+
+            for (int i = 0; i < arr.Count; i++)
+            {
+                if (arr[i] >= max && arr[i] % 2 == 1)
+                {
+                    max = arr[i];
+                    index = i;
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("No matches");
+            }
+            else
+            {
+                Console.WriteLine(index);
+            }
+        }
+
+        private static void ExecuteExchange(List<int> arr, string command)
+        {
+            int index = int.Parse(command.Split()[1]);
+
+            if (index < 0 || index >= arr.Count)
             {
                 Console.WriteLine("Invalid index");
             }
+            else
+            {
+                List<int> partArr = arr.Take(index + 1).ToList();
+                arr.RemoveRange(0, index + 1);
+                arr.AddRange(partArr);
+            }
+        }
+
+        private static List<int> GetArray()
+        {
+            string input = Console.ReadLine();
+            return input.Split().Select(int.Parse).ToList();
         }
     }
 }

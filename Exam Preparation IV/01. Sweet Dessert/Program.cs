@@ -10,43 +10,49 @@ namespace _01.Sweet_Dessert
     {
         static void Main(string[] args)
         {
-            double cash = double.Parse(Console.ReadLine());
+            decimal money = decimal.Parse(Console.ReadLine());
             int guests = int.Parse(Console.ReadLine());
-            double bananasPrice = double.Parse(Console.ReadLine());
-            double eggsPrice = double.Parse(Console.ReadLine());
-            double berriesPrice = double.Parse(Console.ReadLine());
+            decimal bananaPrice = decimal.Parse(Console.ReadLine());
+            decimal eggPrice = decimal.Parse(Console.ReadLine());
+            decimal berriesPrice = decimal.Parse(Console.ReadLine());
 
-            int portions = CalculatePortions(guests);
+            int quantity = GetNumberOfPortions(guests);
+            decimal neededMoney = GetNeededMoney(bananaPrice, eggPrice, berriesPrice, quantity);
 
-            double needForBan = portions * 2 * bananasPrice;
-            double needForEggs = portions * 4 * eggsPrice;
-            double needForBerries = portions * 0.2 * berriesPrice;
+            Print(neededMoney, money);
+        }
 
-            double res = needForBan + needForBerries + needForEggs;
-            res = Math.Round(res, 2);
-
-            if (res <= cash)
+        private static void Print(decimal neededMoney, decimal money)
+        {
+            if (neededMoney > money)
             {
-                Console.WriteLine("Ivancho has enough money - it would cost {0:0.00}lv.", res);
+                Console.WriteLine("Ivancho will have to withdraw money - he will need {0:F2}lv more.", neededMoney - money);
             }
             else
             {
-                Console.WriteLine("Ivancho will have to withdraw money - he will need {0:0.00}lv more.", Math.Round((res - cash), 2));
+                Console.WriteLine("Ivancho has enough money - it would cost {0:F2}lv.", neededMoney);
             }
         }
 
-        private static int CalculatePortions(int guests)
+        private static decimal GetNeededMoney(decimal bananaPrice, decimal eggPrice, decimal berriesPrice, int quantity)
         {
-            int total = guests / 6;
-            int portions = 0;
+            decimal total = 0m;
 
-            if (guests % 6 != 0)
+            total += 2 * quantity * bananaPrice;
+            total += 4 * quantity * eggPrice;
+            total += 0.2m * quantity * berriesPrice;
+
+            return total;
+        }
+
+        private static int GetNumberOfPortions(int guests)
+        {
+            if (guests % 6 == 0)
             {
-                total += 1;
+                return guests / 6;
             }
 
-            portions = total * 6;
-            return portions / 6;
+            return (guests / 6) + 1;
         }
     }
 }
