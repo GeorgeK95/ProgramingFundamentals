@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "01. Melrah Shake", "01. Melrah Shake\01. Melrah Shake.csproj", "{C3A7C9D9-EE9A-48B3-A9C4-AD1AB1F07E32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03. Critical Breakpoint", "03. Critical Breakpoint\03. Critical Breakpoint.csproj", "{5034E258-D02F-40EC-BA30-EB6BEAC80BD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04. GUnit", "04. GUnit\04. GUnit.csproj", "{2FEA0FA7-5724-47F4-967C-741354DA994B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C3A7C9D9-EE9A-48B3-A9C4-AD1AB1F07E32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3A7C9D9-EE9A-48B3-A9C4-AD1AB1F07E32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3A7C9D9-EE9A-48B3-A9C4-AD1AB1F07E32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3A7C9D9-EE9A-48B3-A9C4-AD1AB1F07E32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5034E258-D02F-40EC-BA30-EB6BEAC80BD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5034E258-D02F-40EC-BA30-EB6BEAC80BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5034E258-D02F-40EC-BA30-EB6BEAC80BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5034E258-D02F-40EC-BA30-EB6BEAC80BD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FEA0FA7-5724-47F4-967C-741354DA994B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FEA0FA7-5724-47F4-967C-741354DA994B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FEA0FA7-5724-47F4-967C-741354DA994B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FEA0FA7-5724-47F4-967C-741354DA994B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
