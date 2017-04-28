@@ -85,13 +85,6 @@ namespace _03.Nether_Realms
             return res;
         }
 
-        private static string ReplaceWordsWithSpaces(string currentDemon)
-        {
-            Regex reg = new Regex(@"[a-zA-Z]");
-            currentDemon = reg.Replace(currentDemon, " ");
-            return currentDemon;
-        }
-
         private static int GetDemonHealth(string currentDemon)
         {
             string pattern = @"[^\d\+\-\.\*\/]";
@@ -104,11 +97,6 @@ namespace _03.Nether_Realms
             }
 
             return res;
-        }
-
-        private static string RemoveSpaces(string input)
-        {
-            return input.Replace(" ", "");
         }
 
         private static void PrintDemons(List<Demon> demonsList)
